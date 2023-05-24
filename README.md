@@ -1,2 +1,2 @@
 # eufm
-European Fonds Manager
+European Union Fonds Manager
