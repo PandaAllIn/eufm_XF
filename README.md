@@ -1,7 +1,8 @@
-# European Union Funds Manager (EU FM)
+# EUFM — Xylella (bootstrap)
+This repository is scaffolded for the Monitor A agent and project WBS.
+See `AGENTS.md` and `MONITOR.md` to get started.
 
-## Overview
-
-The European Union Funds Manager (EU FM) is a software project aimed at using AI to help manage and implement projects using non-refundable funds from the European Union.
-
-
+## Next Steps
+- Review the [diagnosis](DIAGNOSIS.md).
+- Follow the [remediation plan](FIX_PLAN.md).
+- Configure the remote using [push instructions](PUSH_INSTRUCTIONS.md).
