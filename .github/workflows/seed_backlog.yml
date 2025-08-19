@@ -1,0 +1,32 @@
+name: Seed Backlog
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Create/update issues for real (unchecked = dry-run)"
+        required: false
+        default: "false"
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Dry run
+        if: github.event.inputs.apply != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python scripts/seed_backlog.py
+      - name: Apply (create/update issues)
+        if: github.event.inputs.apply == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python scripts/seed_backlog.py --apply
