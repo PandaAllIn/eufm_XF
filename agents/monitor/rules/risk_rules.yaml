@@ -1,0 +1,8 @@
+due_soon:
+  description: Item due within 7 days triggers medium risk
+  days_until_due: 7
+  severity: medium
+overdue_high:
+  description: Item overdue by more than 30 days triggers high risk
+  days_overdue: 30
+  severity: high

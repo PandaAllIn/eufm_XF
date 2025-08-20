@@ -1,0 +1,6 @@
+deadline:
+  description: Items past due reduce compliance
+  weight: 0.5
+evidence:
+  description: Items must include acceptance evidence
+  weight: 0.5
