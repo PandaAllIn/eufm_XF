@@ -6,6 +6,12 @@ from datetime import datetime
 
 import yaml
 from github import Github  # third-party
+from pydantic import ValidationError
+
+try:  # pragma: no cover - import fallback for script execution
+    from .models import Milestones, WorkBreakdown
+except ImportError:  # pragma: no cover
+    from models import Milestones, WorkBreakdown
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
@@ -28,16 +34,25 @@ def gar_for_due(due_str):
     return "green"
 
 
-def render_summary():
-    w = load_yaml(ROOT / "wbs" / "wbs.yaml") or {}
+def load_and_validate_wbs() -> WorkBreakdown:
+    data = load_yaml(ROOT / "wbs" / "wbs.yaml") or {}
+    return WorkBreakdown.model_validate(data)
+
+
+def load_and_validate_milestones() -> Milestones:
+    data = load_yaml(ROOT / "wbs" / "milestones.yaml") or {}
+    return Milestones.model_validate(data)
+
+
+def render_summary(wbs: WorkBreakdown) -> str:
     lines = ["# Monitor A — GAR Summary", ""]
-    for wp, items in (w.get("wbs") or {}).items():
+    for wp, items in wbs.wbs.items():
         lines.append(f"## {wp}")
         for it in items:
-            due = it.get("due", "?")
+            due = it.due.isoformat()
             gar = gar_for_due(due)
             lines.append(
-                f"- **{it.get('id', '?')}** {it.get('title', '')} — due {due} — GAR: **{gar.upper()}**"
+                f"- **{it.id}** {it.title} — due {due} — GAR: **{gar.upper()}**"
             )
         lines.append("")
     return "\n".join(lines)
@@ -75,7 +90,14 @@ def main(argv=None):
     )
     args = parser.parse_args(argv)
 
-    summary = render_summary()
+    try:
+        wbs = load_and_validate_wbs()
+        load_and_validate_milestones()
+    except ValidationError as exc:
+        print(exc, file=sys.stderr)
+        return 1
+
+    summary = render_summary(wbs)
     print(summary)
 
     if args.post_comments:
