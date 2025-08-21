@@ -211,7 +211,7 @@ class ResearchAgent:
         """
         Runs the research task and returns a list of potential collaborators.
         """
-        print(f"\n--- Starting Research Agent Task ---")
+        print("\n--- Starting Research Agent Task ---")
         print(f"Task: {research_task}")
 
         # Step 1: Generate a research plan
@@ -255,6 +255,6 @@ class ResearchAgent:
                         print(json.dumps(extracted_data['collaborators'], indent=2))
                         potential_collaborators.extend(extracted_data["collaborators"])
 
-        print(f"\n--- Research Agent Task Finished ---")
+        print("\n--- Research Agent Task Finished ---")
         print(f"DEBUG: Found a total of {len(potential_collaborators)} potential collaborators.")
         return potential_collaborators

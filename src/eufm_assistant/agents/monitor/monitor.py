@@ -3,26 +3,25 @@ import os
 import pathlib
 import sys
 
-# Add the project root to the Python path
-ROOT_DIR = pathlib.Path(__file__).resolve().parents[2]
-sys.path.append(str(ROOT_DIR))
+from github import Github
 
-from github import Github  # third-party
-
-from agents.monitor.core import (
+from eufm_assistant.agents.monitor.core import (
     calculate_compliance_score,
     gar_for_due,
     load_yaml,
 )
 
-ROOT = pathlib.Path(__file__).resolve().parents[2]
+# The project root is now 4 levels up from this file's directory
+PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[4]
 
 
 def render_summary():
-    w = load_yaml(ROOT / "wbs" / "wbs.yaml") or {}
-    rules = (
-        load_yaml(ROOT / "agents" / "monitor" / "rules" / "compliance_rules.yaml") or {}
-    )
+    wbs_file = PROJECT_ROOT / "wbs" / "wbs.yaml"
+    rules_file = PROJECT_ROOT / "src" / "eufm_assistant" / "agents" / "monitor" / "rules" / "compliance_rules.yaml"
+
+    w = load_yaml(wbs_file) or {}
+    rules = load_yaml(rules_file) or {}
+
     compliance_score = calculate_compliance_score(w, rules)
 
     lines = ["# Monitor A — GAR Summary", ""]
@@ -82,4 +81,6 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    # To run this script directly, you must be in the project root and run
+    # `python -m src.eufm_assistant.agents.monitor.monitor`
+    main()
