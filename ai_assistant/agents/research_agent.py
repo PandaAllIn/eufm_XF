@@ -217,41 +217,44 @@ class ResearchAgent:
         # Step 1: Generate a research plan
         research_plan = self._generate_research_plan(research_task)
         if not research_plan:
-            print("Could not generate a research plan. Aborting task.")
+            print("DEBUG: Could not generate a research plan. Aborting task.")
             return []
-        print(f"Agent generated a {len(research_plan)}-step research plan.")
+        print(f"DEBUG: Agent generated a {len(research_plan)}-step research plan:")
+        print(json.dumps(research_plan, indent=2))
 
         potential_collaborators = []
         # Step 2: Execute the research plan
         for step in research_plan:
-            print(f"\nExecuting Step {step['step']}: {step['description']}")
+            print(f"\nDEBUG: Executing Step {step['step']}: {step['description']}")
 
             # 2a: Perform search
             try:
                 results_json = self._google_search(step['query'])
+                print(f"DEBUG: Raw search results for query '{step['query']}':\n{results_json}")
                 search_results = json.loads(results_json)
             except (json.JSONDecodeError, TypeError) as e:
-                print(f"Could not parse search results for query '{step['query']}': {e}")
+                print(f"DEBUG: Could not parse search results for query '{step['query']}': {e}")
                 continue
 
             if not search_results:
-                print("No search results for this step.")
+                print("DEBUG: No search results for this step.")
                 continue
 
-            # 2b: Select promising URLs (can be skipped if results are very direct)
+            # 2b: Select promising URLs
             promising_urls = self._select_promising_urls(search_results, research_task)
-            print(f"Agent selected {len(promising_urls)} promising URLs to investigate.")
+            print(f"DEBUG: Agent selected {len(promising_urls)} promising URLs to investigate: {promising_urls}")
 
             # 2c: View websites and extract info
             for url in promising_urls:
-                print(f"Investigating: {url}")
+                print(f"DEBUG: Investigating: {url}")
                 content = self._view_text_website(url)
                 if content:
                     extracted_data = self._extract_collaborator_info(url, content, research_task)
                     if extracted_data and extracted_data.get("collaborators"):
-                        print(f"Extracted {len(extracted_data['collaborators'])} potential collaborator(s).")
+                        print(f"DEBUG: Extracted {len(extracted_data['collaborators'])} potential collaborator(s):")
+                        print(json.dumps(extracted_data['collaborators'], indent=2))
                         potential_collaborators.extend(extracted_data["collaborators"])
 
         print(f"\n--- Research Agent Task Finished ---")
-        print(f"Found a total of {len(potential_collaborators)} potential collaborators.")
+        print(f"DEBUG: Found a total of {len(potential_collaborators)} potential collaborators.")
         return potential_collaborators
