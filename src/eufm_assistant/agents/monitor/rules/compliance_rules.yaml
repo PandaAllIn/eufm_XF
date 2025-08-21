@@ -1,0 +1,4 @@
+rules:
+  - id: wbs_items_must_have_owner
+    description: "All items in the WBS must have an owner."
+    enabled: true

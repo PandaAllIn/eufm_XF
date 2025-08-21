@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Monitor Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Project Monitor Dashboard</h1>
+        <a href="/research" class="nav-link">Go to AI Research Assistant &rarr;</a>
+        <div class="summary">
+            <h2>Compliance Score: <span class="score">{{ "%.2f"|format(compliance_score) }}%</span></h2>
+        </div>
+        <div class="wbs">
+            <h2>Work Breakdown Structure</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Work Package</th>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Owner</th>
+                        <th>Due Date</th>
+                        <th>GAR Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in work_items %}
+                    <tr>
+                        <td>{{ item.wp }}</td>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.title }}</td>
+                        <td>{{ item.owner }}</td>
+                        <td>{{ item.due }}</td>
+                        <td class="gar-{{ item.gar | lower }}">{{ item.gar }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
