@@ -1,12 +1,6 @@
-import sys
 from datetime import datetime, timezone
-from pathlib import Path
 
-# Add the project root to the Python path
-ROOT_DIR = Path(__file__).resolve().parents[3]
-sys.path.append(str(ROOT_DIR))
-
-from agents.monitor.core import gar_for_due, calculate_compliance_score
+from eufm_assistant.agents.monitor.core import calculate_compliance_score, gar_for_due
 
 
 class MockDateTime(datetime):
@@ -16,7 +10,7 @@ class MockDateTime(datetime):
 
 
 def test_gar_for_due(monkeypatch):
-    monkeypatch.setattr("agents.monitor.core.datetime", MockDateTime)
+    monkeypatch.setattr("eufm_assistant.agents.monitor.core.datetime", MockDateTime)
 
     # Test green case (more than 14 days in the future)
     assert gar_for_due("2025-09-04") == "green"  # 15 days

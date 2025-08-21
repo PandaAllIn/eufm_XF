@@ -1,27 +1,24 @@
-import sys
 import pathlib
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
-# Add the project root to the Python path
-ROOT_DIR = pathlib.Path(__file__).resolve().parents[1]
-sys.path.append(str(ROOT_DIR))
-
-from flask import request
-from agents.monitor.core import (
+from eufm_assistant.agents.monitor.core import (
     calculate_compliance_score,
     gar_for_due,
     load_yaml,
 )
-from ai_assistant.agents.research_agent import ResearchAgent
-from ai_assistant.agents.document_agent import DocumentAgent
-from ai_assistant.main import load_settings
+from eufm_assistant.agents.document_agent import DocumentAgent
+from eufm_assistant.agents.research_agent import ResearchAgent
+from eufm_assistant.ai_assistant.main import load_settings
+
+# The project root is now 3 levels up from this file's directory
+PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[3]
 
 app = Flask(__name__)
 
 @app.route('/')
 def dashboard():
-    wbs_file = ROOT_DIR / "wbs" / "wbs.yaml"
-    rules_file = ROOT_DIR / "agents" / "monitor" / "rules" / "compliance_rules.yaml"
+    wbs_file = PROJECT_ROOT / "wbs" / "wbs.yaml"
+    rules_file = PROJECT_ROOT / "src" / "eufm_assistant" / "agents" / "monitor" / "rules" / "compliance_rules.yaml"
 
     wbs_data = load_yaml(wbs_file) or {}
     rules_data = load_yaml(rules_file) or {}
@@ -55,7 +52,7 @@ def research():
         document_agent = DocumentAgent(settings)
 
         # Load context for the document agent
-        brief_path = ROOT_DIR / "Horizon_Xilella.md"
+        brief_path = PROJECT_ROOT / "Horizon_Xilella.md"
         document_agent.load_project_brief(brief_path)
 
         # Run the full workflow
@@ -70,4 +67,6 @@ def research():
     return render_template('research.html')
 
 if __name__ == '__main__':
+    # To run this script directly for testing, you would need to be in the project root
+    # and run `python -m src.eufm_assistant.dashboard.app`
     app.run(debug=True, host='0.0.0.0', port=8081)

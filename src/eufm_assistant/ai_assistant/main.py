@@ -1,16 +1,13 @@
 import yaml
 import argparse
 import json
-import sys
 import pathlib
 
-# This is a bit of a hack to make sure the parent directory is on the path
-# for when this script is run directly.
-if __name__ == '__main__':
-    sys.path.append(str(pathlib.Path(__file__).resolve().parents[1]))
+from eufm_assistant.agents.research_agent import ResearchAgent
+from eufm_assistant.agents.document_agent import DocumentAgent
 
-from ai_assistant.agents.research_agent import ResearchAgent
-from ai_assistant.agents.document_agent import DocumentAgent
+# The project root is now 3 levels up from this file's directory
+PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[3]
 
 def load_settings():
     """Loads settings from the settings.yaml file."""
@@ -47,7 +44,8 @@ def main():
     document_agent = DocumentAgent(settings)
 
     # Load context into Document Agent
-    document_agent.load_project_brief("Horizon_Xilella.md")
+    brief_path = PROJECT_ROOT / "Horizon_Xilella.md"
+    document_agent.load_project_brief(brief_path)
 
     # --- Execute a full workflow: Research -> Draft ---
 
@@ -60,16 +58,18 @@ def main():
         return
 
     # 2. Run Document Agent on each result
-    print(f"\n--- Running Document Agent to Draft Emails ---")
+    print("\n--- Running Document Agent to Draft Emails ---")
     for collaborator in potential_collaborators:
         email_draft = document_agent.draft_outreach_email(collaborator)
         collaborator['outreach_email'] = email_draft
 
     # 3. Print the final, consolidated results
-    print(f"\n--- Main controller received final result: ---")
+    print("\n--- Main controller received final result: ---")
     print(json.dumps(potential_collaborators, indent=2))
     print("\n--- AI Assistant Finished ---")
 
 
 if __name__ == "__main__":
+    # To run this script directly, you must be in the project root and run
+    # `python -m src.eufm_assistant.ai_assistant.main "Your task here"`
     main()

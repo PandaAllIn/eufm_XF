@@ -30,7 +30,7 @@ class DocumentAgent:
         if not self.openai_client:
             print("WARNING: OpenAI client not initialized. Using mock email draft.")
             return {
-                "subject": f"Collaboration Inquiry: Xylella Fastidiosa Research (Mock)",
+                "subject": "Collaboration Inquiry: Xylella Fastidiosa Research (Mock)",
                 "body": f"Dear {collaborator_profile.get('name')},\n\nThis is a mock email body. We are interested in your work on {collaborator_profile.get('summary_of_relevance')}.\n\nSincerely,\nThe Project Team"
             }
 
