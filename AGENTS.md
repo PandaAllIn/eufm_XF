@@ -1,21 +1,68 @@
-# Contributor Guide for Agents (Monitor A focus)
+# Contributor Guide for Agents
 
-## What to work on
-- Primary folder: `/agents/monitor/`.
-- Source of truth for tasks: `/wbs/wbs.yaml` and `/wbs/milestones.yaml`.
-- Compliance rules live in `/agents/monitor/rules/*.yaml`.
+This document describes the agents and automated tools in this repository.
 
-## How to validate changes
+---
+
+## Monitor A (Legacy)
+
+This agent provides a simple status report based on the WBS.
+
+**Primary folder:** `/agents/monitor/`
+
+**How to validate:**
 - Run `python -m pytest agents/monitor/tests -q` (tests must pass).
 - Run `ruff check . && ruff format --check .` for lint/format.
-- `python agents/monitor/monitor.py --dry-run` should:
-  - Render a summary table per WP (GAR flags).
-  - Print next 14-day deadlines and any blockers.
+- `python agents/monitor/monitor.py --dry-run`
 
-## PR instructions
-- Title: `[monitor] <concise change>`
-- Include: before/after monitor output snippet and links to related issues.
+---
 
-## Monitor A contract
-- Must not change WBS files unless the PR includes a matching rationale in `/docs/plan_overview.md`.
-- Must attach a `compliance_score` (0-100) to each run based on rules.
+# AI Project Assistant Agents
+
+This section documents the new, more advanced AI agents being built.
+
+## 1. Research Agent
+
+**File Location:** `ai_assistant/agents/research_agent.py`
+
+### Purpose
+
+The Research Agent is responsible for conducting online research to gather intelligence and find information relevant to the project. Its primary initial task is to identify potential collaborators for the Horizon Europe proposal.
+
+### How to Use
+
+The agent is run via the main controller script: `ai_assistant/main.py`.
+
+**Command:**
+```bash
+python ai_assistant/main.py "Your high-level research task here"
+```
+
+**Example Task:**
+`python ai_assistant/main.py "Find research institutions in Italy that have published papers on Xylella fastidiosa vectors."`
+
+### Input
+
+The agent takes a single string as input: `research_task`. This should be a high-level description of the research goal.
+
+### Output
+
+The agent returns a structured JSON list of potential collaborators. Each item in the list is an object with the following fields:
+- `name` (str): The name of the person or institution.
+- `role` (str): Their role or title.
+- `affiliation` (str): Their affiliated university or company.
+- `email` (str|null): Their contact email, if found.
+- `summary_of_relevance` (str): A brief summary of why they are relevant to the input task.
+
+**Example Output:**
+```json
+[
+  {
+    "name": "Dr. Maria Rossi",
+    "role": "Lead Entomologist",
+    "affiliation": "University of Bologna, Department of Agricultural Sciences",
+    "email": "maria.rossi@unibo.it",
+    "summary_of_relevance": "Co-authored a 2023 paper on the lifecycle of Philaenus spumarius, the primary vector for Xylella in Europe."
+  }
+]
+```
