@@ -2,35 +2,33 @@ import argparse
 import os
 import pathlib
 import sys
-from datetime import datetime
 
-import yaml
+# Add the project root to the Python path
+ROOT_DIR = pathlib.Path(__file__).resolve().parents[2]
+sys.path.append(str(ROOT_DIR))
+
 from github import Github  # third-party
+
+from agents.monitor.core import (
+    calculate_compliance_score,
+    gar_for_due,
+    load_yaml,
+)
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
 
-def load_yaml(p):
-    with open(p, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
-
-def gar_for_due(due_str):
-    try:
-        due = datetime.strptime(due_str, "%Y-%m-%d").date()
-    except Exception:
-        return "grey"
-    today = datetime.utcnow().date()
-    if due < today:
-        return "red"
-    if (due - today).days <= 14:
-        return "amber"
-    return "green"
-
-
 def render_summary():
     w = load_yaml(ROOT / "wbs" / "wbs.yaml") or {}
+    rules = (
+        load_yaml(ROOT / "agents" / "monitor" / "rules" / "compliance_rules.yaml") or {}
+    )
+    compliance_score = calculate_compliance_score(w, rules)
+
     lines = ["# Monitor A — GAR Summary", ""]
+    lines.append(f"**Compliance Score**: {compliance_score:.2f}%")
+    lines.append("")
+
     for wp, items in (w.get("wbs") or {}).items():
         lines.append(f"## {wp}")
         for it in items:
