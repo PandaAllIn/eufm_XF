@@ -1,0 +1,7 @@
+rules:
+  - name: "Work Package Leader"
+    description: "Every work package must have a designated leader."
+    condition: "wp.leader is not None"
+  - name: "Work Package has Tasks"
+    description: "Every work package should have at least one task."
+    condition: "len(wp.tasks) > 0"

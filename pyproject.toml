@@ -1,0 +1,16 @@
+[project]
+name = "eufm_assistant"
+version = "0.1.0"
+description = "An AI assistant for managing the EUFM Xylella Fastidiosa project."
+dependencies = [
+    "pyyaml",
+    "requests",
+    "ruff",
+    "pytest",
+    "PyGithub",
+    "Flask",
+    "openai",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

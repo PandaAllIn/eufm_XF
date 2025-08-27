@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Strategy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/">Home</a>
+            <a href="/research">Research</a>
+            <a href="/strategy">Strategy</a>
+        </nav>
+
+        <h1>Project Strategy</h1>
+
+        <div>
+            <!-- The strategy content will be rendered here from the markdown file. -->
+            <!-- The 'safe' filter is used, so ensure the source markdown is trusted. -->
+            {{ strategy_content | safe }}
+        </div>
+
+    </div>
+</body>
+</html>
