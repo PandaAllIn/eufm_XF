@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/">Home</a>
+            <a href="/research">Research</a>
+            <a href="/strategy">Strategy</a>
+        </nav>
+
+        <h1>Research Assistant</h1>
+        <p>Find potential partners for the project.</p>
+
+        <form action="/research" method="post" class="research-form">
+            <input type="text" name="query" placeholder="e.g., partners in Spain with expertise in olive tree pathology" required>
+            <button type="submit">Research</button>
+        </form>
+
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+
+        {% if results %}
+            <h2>Research Results</h2>
+            <div class="research-results">
+                {% for item in results %}
+                    <div class="result">
+                        <h3>{{ item.partner.organisation_name }} ({{ item.partner.country }})</h3>
+                        <p><strong>Project:</strong> {{ item.partner.project_title }} ({{ item.partner.project_acronym }})</p>
+                        <p><strong>Summary:</strong> {{ item.partner.summary }}</p>
+                        <p><strong>Contact:</strong> {{ item.partner.contact_person }}</p>
+                        <h4>Draft Outreach Email:</h4>
+                        <div class="email-draft">
+                            {{ item.email }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
