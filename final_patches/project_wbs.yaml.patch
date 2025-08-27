@@ -1,0 +1,56 @@
+diff --git a/src/eufm_assistant/docs/project_wbs.yaml b/src/eufm_assistant/docs/project_wbs.yaml
+new file mode 100644
+index 0000000..b9d3054
+--- /dev/null
++++ b/src/eufm_assistant/docs/project_wbs.yaml
+@@ -0,0 +1,50 @@
++work_packages:
++  - id: WP1
++    title: Project Management and Coordination
++    leader: SME (Your Startup)
++    tasks: []
++    deliverables: []
++    start_date: null
++    end_date: null
++  - id: WP2
++    title: Rational Design and Synthesis of Novel Phosphinic Acid Library
++    leader: SME (Your Brother)
++    tasks: []
++    deliverables: []
++    start_date: null
++    end_date: null
++  - id: WP3
++    title: In Vitro and Laboratory Screening
++    leader: University Partner
++    tasks: []
++    deliverables: []
++    start_date: null
++    end_date: null
++  - id: WP4
++    title: Greenhouse Validation
++    leader: University or RTO Partner
++    tasks: []
++    deliverables: []
++    start_date: null
++    end_date: null
++  - id: WP5
++    title: '"Living Lab" Field Trials'
++    leader: Research Organization Partner
++    tasks: []
++    deliverables: []
++    start_date: null
++    end_date: null
++  - id: WP6
++    title: Dissemination, Exploitation, and Communication
++    leader: SME (Your Startup)
++    tasks: []
++    deliverables: []
++    start_date: null
++    end_date: null
++  - id: WP7
++    title: Ethics and Data Management
++    leader: TBD
++    tasks: []
++    deliverables: []
++    start_date: null
++    end_date: null

@@ -2,35 +2,32 @@ import argparse
 import os
 import pathlib
 import sys
-from datetime import datetime
 
-import yaml
-from github import Github  # third-party
+from github import Github
 
-ROOT = pathlib.Path(__file__).resolve().parents[2]
+from eufm_assistant.agents.monitor.core import (
+    calculate_compliance_score,
+    gar_for_due,
+    load_yaml,
+)
 
-
-def load_yaml(p):
-    with open(p, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
-
-def gar_for_due(due_str):
-    try:
-        due = datetime.strptime(due_str, "%Y-%m-%d").date()
-    except Exception:
-        return "grey"
-    today = datetime.utcnow().date()
-    if due < today:
-        return "red"
-    if (due - today).days <= 14:
-        return "amber"
-    return "green"
+# The project root is now 4 levels up from this file's directory
+PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[4]
 
 
 def render_summary():
-    w = load_yaml(ROOT / "wbs" / "wbs.yaml") or {}
+    wbs_file = PROJECT_ROOT / "wbs" / "wbs.yaml"
+    rules_file = PROJECT_ROOT / "src" / "eufm_assistant" / "agents" / "monitor" / "rules" / "compliance_rules.yaml"
+
+    w = load_yaml(wbs_file) or {}
+    rules = load_yaml(rules_file) or {}
+
+    compliance_score = calculate_compliance_score(w, rules)
+
     lines = ["# Monitor A — GAR Summary", ""]
+    lines.append(f"**Compliance Score**: {compliance_score:.2f}%")
+    lines.append("")
+
     for wp, items in (w.get("wbs") or {}).items():
         lines.append(f"## {wp}")
         for it in items:
@@ -84,4 +81,6 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    # To run this script directly, you must be in the project root and run
+    # `python -m src.eufm_assistant.agents.monitor.monitor`
+    main()

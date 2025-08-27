@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Plan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Coordinator Agent's Strategic Plan</h1>
+        <p>Based on its analysis of all project documents, the Coordinator Agent suggests the following high-level goals to move the project forward.</p>
+
+        {% if error %}
+            <div class="results-container error">
+                <h2>Error</h2>
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+
+        {% if plan %}
+            <div class="results-container">
+                <h2>Suggested Goals</h2>
+                <ul class="strategy-list">
+                    {% for goal in plan %}
+                        <li>{{ goal }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <a href="/" class="back-link">&larr; Back to Main Dashboard</a>
+    </div>
+</body>
+</html>
