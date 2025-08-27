@@ -1,75 +1,41 @@
-import yaml
 import argparse
-import json
-import pathlib
-
+import sys
 from eufm_assistant.agents.research_agent import ResearchAgent
 from eufm_assistant.agents.document_agent import DocumentAgent
-
-# The project root is now 3 levels up from this file's directory
-PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[3]
-
-def load_settings():
-    """Loads settings from the settings.yaml file."""
-    # Use an absolute path relative to this file to be more robust
-    settings_path = pathlib.Path(__file__).parent / "config" / "settings.yaml"
-    try:
-        with open(settings_path, 'r') as f:
-            return yaml.safe_load(f)
-    except FileNotFoundError:
-        print(f"Error: The configuration file '{settings_path}' was not found.")
-        return None
-    except Exception as e:
-        print(f"An error occurred while loading the settings file: {e}")
-        return None
+from eufm_assistant.agents.coordinator_agent import CoordinatorAgent
 
 def main():
-    """
-    Main entry point for the AI Assistant.
-    This script initializes and runs agents based on command-line arguments.
-    """
-    parser = argparse.ArgumentParser(description="AI Assistant for Project Management")
-    parser.add_argument("task", type=str, help="The research task to be performed by the Research Agent.")
+    parser = argparse.ArgumentParser(description="AI Assistant for EUFM Project")
+    parser.add_argument("task", help="The task for the AI assistant to perform.")
+    parser.add_argument("--query", help="The research query for the research agent.")
     args = parser.parse_args()
-
-    print("--- Starting AI Assistant ---")
-    settings = load_settings()
-    if not settings:
-        print("Could not load settings. Exiting.")
-        return
-
-    # Initialize Agents
-    print("--- Initializing Agents ---")
-    research_agent = ResearchAgent(settings)
-    document_agent = DocumentAgent(settings)
-
-    # Load context into Document Agent
-    brief_path = PROJECT_ROOT / "Horizon_Xilella.md"
-    document_agent.load_project_brief(brief_path)
-
-    # --- Execute a full workflow: Research -> Draft ---
-
-    # 1. Run Research Agent
-    print(f"\n--- Running Research Agent with Task: '{args.task}' ---")
-    potential_collaborators = research_agent.run(args.task)
-
-    if not potential_collaborators:
-        print("\nNo potential collaborators found. Exiting workflow.")
-        return
-
-    # 2. Run Document Agent on each result
-    print("\n--- Running Document Agent to Draft Emails ---")
-    for collaborator in potential_collaborators:
-        email_draft = document_agent.draft_outreach_email(collaborator)
-        collaborator['outreach_email'] = email_draft
-
-    # 3. Print the final, consolidated results
-    print("\n--- Main controller received final result: ---")
-    print(json.dumps(potential_collaborators, indent=2))
-    print("\n--- AI Assistant Finished ---")
-
+    if args.task == "find_partners":
+        if not args.query:
+            print("Error: The --query argument is required for the 'find_partners' task.")
+            sys.exit(1)
+        print(f"Starting the research agent to find partners with query: {args.query}")
+        research_agent = ResearchAgent()
+        partner_data = research_agent.run(args.query)
+        if partner_data:
+            print("\n--- Research Agent Found the Following Potential Partners ---")
+            print(partner_data)
+            print("\n--- Starting Document Agent to Draft Outreach Emails ---")
+            document_agent = DocumentAgent()
+            emails = document_agent.draft_outreach_emails(partner_data)
+            print("\n--- Document Agent Drafted the Following Emails ---")
+            for email in emails:
+                print("---")
+                print(email)
+            print("---")
+        else:
+            print("The research agent did not find any partners.")
+    elif args.task == "coordinate":
+        print("Starting the Coordinator Agent...")
+        coordinator_agent = CoordinatorAgent()
+        coordinator_agent.run()
+    else:
+        print(f"Unknown task: {args.task}")
+        sys.exit(1)
 
 if __name__ == "__main__":
-    # To run this script directly, you must be in the project root and run
-    # `python -m src.eufm_assistant.ai_assistant.main "Your task here"`
     main()
