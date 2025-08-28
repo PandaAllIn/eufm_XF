@@ -82,7 +82,9 @@ def main():
     research_agent = ResearchAgent(settings)
     document_agent = DocumentAgent(settings)
 
-    # The Document Agent loads its own context from the knowledge base file.
+    # Load context into Document Agent
+    brief_path = PROJECT_ROOT / "Horizon_Xilella.md"
+    document_agent.load_project_brief(brief_path)
 
     # --- Execute a full workflow: Research -> Draft ---
     print(f"\n--- Running Research Agent with Query: '{args.query}' ---")
