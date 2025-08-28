@@ -15,6 +15,44 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <h2>Project Timeline</h2>
+        <div id="timeline"></div>
     </div>
+
+    <script>
+    fetch('/api/timeline')
+        .then(response => response.json())
+        .then(data => {
+            const timelineContainer = document.getElementById('timeline');
+            if (data.length === 0) {
+                timelineContainer.innerHTML = '<p>No timeline events found.</p>';
+                return;
+            }
+
+            const timelineEl = document.createElement('div');
+            timelineEl.className = 'timeline-container';
+
+            data.forEach(event => {
+                const eventEl = document.createElement('div');
+                eventEl.className = 'timeline-event';
+                eventEl.innerHTML = `
+                    <div class="timeline-date">${event.due}</div>
+                    <div class="timeline-content">
+                        <h4>${event.title} (${event.wp})</h4>
+                        <p><strong>Type:</strong> ${event.type} | <strong>Owner:</strong> ${event.owner}</p>
+                    </div>
+                `;
+                timelineEl.appendChild(eventEl);
+            });
+
+            timelineContainer.appendChild(timelineEl);
+        })
+        .catch(error => {
+            console.error('Error fetching timeline data:', error);
+            const timelineContainer = document.getElementById('timeline');
+            timelineContainer.innerHTML = '<p>Could not load timeline data.</p>';
+        });
+    </script>
 </body>
 </html>

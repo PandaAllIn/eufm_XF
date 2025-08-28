@@ -4,9 +4,11 @@ import yaml
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
+
 def load_yaml(p):
     with open(p, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
+
 
 def gar_for_due(due_str):
     try:
@@ -19,6 +21,7 @@ def gar_for_due(due_str):
     if (due - today).days <= 14:
         return "amber"
     return "green"
+
 
 def calculate_compliance_score(wbs_data, rules_data):
     rules = rules_data.get("rules", [])

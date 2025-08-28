@@ -19,3 +19,60 @@ nav a:hover { text-decoration: underline; }
 .research-results .result { border: 1px solid #ddd; padding: 1em; margin-bottom: 1em; border-radius: 5px; background-color: #fafafa; }
 .research-results h3 { margin-top: 0; }
 .email-draft { white-space: pre-wrap; font-family: monospace; background: #eef; padding: 1em; border: 1px dashed #ccc; border-radius: 4px; }
+
+/* Timeline styles */
+#timeline {
+    margin-top: 2em;
+}
+
+.timeline-container {
+    border-left: 3px solid #007bff;
+    margin: 30px;
+    padding: 10px 20px;
+    position: relative;
+}
+
+.timeline-event {
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 35px;
+}
+
+.timeline-event:before {
+    content: '';
+    position: absolute;
+    left: -11px;
+    top: 5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: white;
+    border: 3px solid #007bff;
+    z-index: 1;
+}
+
+.timeline-date {
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.timeline-content {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.timeline-content h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.timeline-content p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #555;
+}
