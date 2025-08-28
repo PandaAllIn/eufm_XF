@@ -6,6 +6,7 @@ src/eufm_assistant.egg-info/dependency_links.txt
 src/eufm_assistant.egg-info/requires.txt
 src/eufm_assistant.egg-info/top_level.txt
 src/eufm_assistant/agents/__init__.py
+src/eufm_assistant/agents/coordinator_agent.py
 src/eufm_assistant/agents/document_agent.py
 src/eufm_assistant/agents/research_agent.py
 src/eufm_assistant/agents/monitor/__init__.py
@@ -13,6 +14,8 @@ src/eufm_assistant/agents/monitor/core.py
 src/eufm_assistant/agents/monitor/monitor.py
 src/eufm_assistant/agents/monitor/tests/__init__.py
 src/eufm_assistant/agents/monitor/tests/test_monitor.py
+src/eufm_assistant/agents/tests/__init__.py
+src/eufm_assistant/agents/tests/test_coordinator_agent.py
 src/eufm_assistant/ai_assistant/__init__.py
 src/eufm_assistant/ai_assistant/main.py
 src/eufm_assistant/dashboard/app.py

@@ -5,6 +5,7 @@ import pathlib
 
 from eufm_assistant.agents.research_agent import ResearchAgent
 from eufm_assistant.agents.document_agent import DocumentAgent
+from eufm_assistant.agents.coordinator_agent import CoordinatorAgent
 
 # The project root is now 3 levels up from this file's directory
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[3]
@@ -29,47 +30,62 @@ def main():
     This script initializes and runs agents based on command-line arguments.
     """
     parser = argparse.ArgumentParser(description="AI Assistant for Project Management")
-    parser.add_argument("task", type=str, help="The research task to be performed by the Research Agent.")
+    subparsers = parser.add_subparsers(dest="command", required=True, help="Available commands")
+
+    # Research command
+    parser_research = subparsers.add_parser("research", help="Run the research agent to find collaborators.")
+    parser_research.add_argument("query", type=str, help="The research query for the research agent.")
+
+    # Coordinate command
+    parser_coordinate = subparsers.add_parser("coordinate", help="Run the coordinator agent for strategic tasks.")
+    parser_coordinate.add_argument("--task", default="wbs_status", help="The specific task for the coordinator agent (e.g., 'proposal_checklist').")
+
     args = parser.parse_args()
 
     print("--- Starting AI Assistant ---")
+
+    if args.command == "coordinate":
+        coordinator_agent = CoordinatorAgent()
+        coordinator_agent.run(task=args.task)
+        return
+
+    # For research command, load settings and other agents
     settings = load_settings()
     if not settings:
         print("Could not load settings. Exiting.")
         return
 
-    # Initialize Agents
-    print("--- Initializing Agents ---")
-    research_agent = ResearchAgent(settings)
-    document_agent = DocumentAgent(settings)
+    if args.command == "research":
+        # Initialize Agents
+        print("--- Initializing Agents ---")
+        research_agent = ResearchAgent(settings)
+        document_agent = DocumentAgent(settings)
 
-    # Load context into Document Agent
-    brief_path = PROJECT_ROOT / "Horizon_Xilella.md"
-    document_agent.load_project_brief(brief_path)
+        # Load context into Document Agent
+        brief_path = PROJECT_ROOT / "Horizon_Xilella.md"
+        document_agent.load_project_brief(brief_path)
 
-    # --- Execute a full workflow: Research -> Draft ---
+        # --- Execute a full workflow: Research -> Draft ---
+        print(f"\n--- Running Research Agent with Query: '{args.query}' ---")
+        potential_collaborators = research_agent.run(args.query)
 
-    # 1. Run Research Agent
-    print(f"\n--- Running Research Agent with Task: '{args.task}' ---")
-    potential_collaborators = research_agent.run(args.task)
+        if not potential_collaborators:
+            print("\nNo potential collaborators found. Exiting workflow.")
+            return
 
-    if not potential_collaborators:
-        print("\nNo potential collaborators found. Exiting workflow.")
-        return
+        print("\n--- Running Document Agent to Draft Emails ---")
+        for collaborator in potential_collaborators:
+            email_draft = document_agent.draft_outreach_email(collaborator)
+            collaborator['outreach_email'] = email_draft
 
-    # 2. Run Document Agent on each result
-    print("\n--- Running Document Agent to Draft Emails ---")
-    for collaborator in potential_collaborators:
-        email_draft = document_agent.draft_outreach_email(collaborator)
-        collaborator['outreach_email'] = email_draft
+        print("\n--- Main controller received final result: ---")
+        print(json.dumps(potential_collaborators, indent=2))
 
-    # 3. Print the final, consolidated results
-    print("\n--- Main controller received final result: ---")
-    print(json.dumps(potential_collaborators, indent=2))
     print("\n--- AI Assistant Finished ---")
 
 
 if __name__ == "__main__":
-    # To run this script directly, you must be in the project root and run
-    # `python -m src.eufm_assistant.ai_assistant.main "Your task here"`
+    # Example commands:
+    # python -m src.eufm_assistant.ai_assistant.main research "Find experts on Xylella fastidiosa in Italy"
+    # python -m src.eufm_assistant.ai_assistant.main coordinate --task proposal_checklist
     main()
