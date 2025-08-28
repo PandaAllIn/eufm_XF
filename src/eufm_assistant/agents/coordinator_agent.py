@@ -1,16 +1,25 @@
 import yaml
+import re
+import pathlib
+
+# The project root is 3 levels up from this file's directory
+PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[3]
 
 
 class CoordinatorAgent:
+feature/interactive-timeline
     def __init__(self, wbs_file_path="src/eufm_assistant/docs/project_wbs.yaml"):
+=======
+    def __init__(self, wbs_file_path=None, proposal_path=None):
+main
         """
         Initializes the CoordinatorAgent.
-
-        Args:
-            wbs_file_path (str): The path to the Work Breakdown Structure YAML file.
         """
-        self.wbs_file_path = wbs_file_path
+        # Use robust paths relative to the project root
+        self.wbs_file_path = wbs_file_path or PROJECT_ROOT / "wbs" / "wbs.yaml"
+        self.proposal_path = proposal_path or PROJECT_ROOT / "Horizon_Xilella.md"
         self.wbs = self._load_wbs()
+        self.proposal_content = self._load_proposal()
 
     def _load_wbs(self):
         """Loads the WBS data from the YAML file."""
@@ -24,13 +33,35 @@ class CoordinatorAgent:
             print(f"Error parsing WBS YAML file: {e}")
             return None
 
+    def _load_proposal(self):
+        """Loads the proposal markdown file."""
+        try:
+            with open(self.proposal_path, 'r') as file:
+                return file.read()
+        except FileNotFoundError:
+            print(f"Error: Proposal file not found at {self.proposal_path}")
+            return ""
+
     def determine_next_task(self):
         """
         Determines the next high-level task based on the current state of the WBS.
-
-        Returns:
-            str: A string describing the suggested next action.
         """
+        if not self.wbs or 'wbs' not in self.wbs:
+            return "WBS is not loaded or is in an invalid format. Cannot determine next task."
+
+        wbs_data = self.wbs.get('wbs', {})
+
+        # This logic is a placeholder for a more sophisticated analysis.
+        # For now, we just check if any work package has an empty task list.
+        for wp_id, items in wbs_data.items():
+            if not items:
+                return f"Next Action: Define tasks for Work Package '{wp_id}'."
+
+        return "All work packages seem to have tasks defined. Project is on track."
+
+    def create_proposal_checklist(self):
+        """
+feature/interactive-timeline
         if not self.wbs or "work_packages" not in self.wbs:
             return "WBS is not loaded or is invalid. Cannot determine next task."
 
@@ -43,17 +74,43 @@ class CoordinatorAgent:
         for wp in self.wbs["work_packages"]:
             if not wp.get("tasks"):  # Check for empty list or missing key
                 return f"Next Action: Define tasks for Work Package '{wp['id']}: {wp['title']}'."
-
-        # If all rules pass, the project is well-defined for now.
-        return "All work packages have leaders and tasks defined. Project is on track."
-
-    def run(self):
+=======
+        Parses the proposal document and creates a checklist of sections.
         """
-        Runs the coordinator agent to determine and report the next course of action.
+        if not self.proposal_content:
+            return "Proposal document not loaded. Cannot create checklist."
+
+        headers = re.findall(r'^(Part\s+[IVX]+:.*|^\d+\.\d+\s+.*)', self.proposal_content, re.MULTILINE)
+        if not headers:
+            return "No headers found in the proposal document."
+
+        checklist = "--- Proposal Section Checklist ---\n"
+        for title in headers:
+            indent = "  " if title.strip().startswith("Part") is False else ""
+            checklist += f"{indent}- [ ] {title.strip()}\n"
+main
+
+        checklist += "---------------------------------"
+        return checklist
+
+    def run(self, task='wbs_status'):
         """
+        Runs the coordinator agent to perform a specific task.
+        """
+feature/interactive-timeline
         print("CoordinatorAgent is running...")
         next_action = self.determine_next_task()
         print("--- Coordinator Agent Analysis ---")
         print(next_action)
         print("---------------------------------")
         return next_action
+=======
+        print(f"CoordinatorAgent running task: {task}")
+        if task == 'proposal_checklist':
+            result = self.create_proposal_checklist()
+        else:
+            result = self.determine_next_task()
+
+        print(result)
+        return result
+main

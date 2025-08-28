@@ -3,7 +3,7 @@
 <head><meta charset="UTF-8"><title>EUFM Assistant Dashboard</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
 <body>
     <div class="container">
-        <nav><a href="/">Home</a><a href="/research">Research</a><a href="/strategy">Strategy</a></nav>
+        <nav><a href="/">Home</a><a href="/research">Research</a><a href="/strategy">Strategy</a><a href="/documents">Documents</a></nav>
         <h1>EUFM Assistant Dashboard</h1>
         <div class="compliance-score">Compliance Score: <span class="score {% if compliance_score > 80 %}status-green{% elif compliance_score > 50 %}status-yellow{% else %}status-red{% endif %}">{{ compliance_score }}%</span></div>
         <h2>Work Breakdown Structure (WBS)</h2>

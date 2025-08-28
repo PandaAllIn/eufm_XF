@@ -1,5 +1,11 @@
+feature/interactive-timeline
 from flask import Flask, render_template, request, jsonify
 import yaml
+=======
+from flask import Flask, render_template, request, redirect, url_for
+from werkzeug.utils import secure_filename
+import os
+main
 from eufm_assistant.agents.research_agent import ResearchAgent
 from eufm_assistant.agents.document_agent import DocumentAgent
 from eufm_assistant.agents.monitor.monitor import (
@@ -7,7 +13,13 @@ from eufm_assistant.agents.monitor.monitor import (
     calculate_compliance_score,
 )
 
+feature/interactive-timeline
 app = Flask(__name__, template_folder="templates", static_folder="static")
+=======
+app = Flask(__name__, template_folder='templates', static_folder='static')
+UPLOAD_FOLDER = 'src/eufm_assistant/dashboard/storage'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+main
 
 
 @app.route("/")
@@ -72,5 +84,25 @@ def strategy():
     return render_template("strategy.html", strategy_content=content)
 
 
+feature/interactive-timeline
 if __name__ == "__main__":
+=======
+@app.route('/documents', methods=['GET', 'POST'])
+def documents():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            return redirect(request.url)
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('documents'))
+
+    docs = os.listdir(app.config['UPLOAD_FOLDER'])
+    return render_template('documents.html', documents=docs)
+
+if __name__ == '__main__':
+main
     app.run(debug=True, port=8080)
