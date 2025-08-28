@@ -18,18 +18,14 @@ def calculate_compliance_score(wbs_data):
     for wp in wbs_data['work_packages']:
         total_possible_score += 3
         current_score += 1
-        if wp.get('leader'):
-            current_score += 1
-        if 'tasks' in wp:
-            current_score += 1
+        if wp.get('leader'): current_score += 1
+        if 'tasks' in wp: current_score += 1
         if 'tasks' in wp:
             for task in wp['tasks']:
                 total_possible_score += 1
                 if 'end_date' in task and task['end_date']:
                     if datetime.fromisoformat(task['end_date']) >= now or task.get('status') == 'Completed':
-                        current_score += 1
-                else:
-                    current_score += 1
-    if total_possible_score == 0:
-        return 100
+                        current_score +=1
+                else: current_score += 1
+    if total_possible_score == 0: return 100
     return int((current_score / total_possible_score) * 100)
