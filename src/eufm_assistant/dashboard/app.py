@@ -52,6 +52,7 @@ def documents():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect(url_for('documents'))
 
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     docs = os.listdir(app.config['UPLOAD_FOLDER'])
     return render_template('documents.html', documents=docs)
 
