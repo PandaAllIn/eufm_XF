@@ -1,8 +1,4 @@
 import argparse
-feature/phase1-agent-updates
-=======
-import sys
-main
 import json
 import pathlib
 import yaml
@@ -11,8 +7,6 @@ from eufm_assistant.agents.research_agent import ResearchAgent
 from eufm_assistant.agents.document_agent import DocumentAgent
 from eufm_assistant.agents.coordinator_agent import CoordinatorAgent
 
-feature/interactive-timeline
-=======
 # The project root is 3 levels up from this file's directory
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[3]
 
@@ -28,7 +22,6 @@ def load_settings():
     except yaml.YAMLError as e:
         print(f"Error parsing settings YAML file: {e}")
         return None
-main
 
 def main():
     """
@@ -47,37 +40,10 @@ def main():
     parser_coordinate.add_argument("--task", default="wbs_status", help="The specific task for the coordinator agent (e.g., 'proposal_checklist').")
 
     args = parser.parse_args()
-feature/interactive-timeline
-    if args.task == "find_partners":
-        if not args.query:
-            print(
-                "Error: The --query argument is required for the 'find_partners' task."
-            )
-            sys.exit(1)
-        print(f"Starting the research agent to find partners with query: {args.query}")
-        research_agent = ResearchAgent()
-        partner_data = research_agent.run(args.query)
-        if partner_data:
-            print("\n--- Research Agent Found the Following Potential Partners ---")
-            print(partner_data)
-            print("\n--- Starting Document Agent to Draft Outreach Emails ---")
-            document_agent = DocumentAgent()
-            emails = document_agent.draft_outreach_emails(partner_data)
-            print("\n--- Document Agent Drafted the Following Emails ---")
-            for email in emails:
-                print("---")
-                print(email)
-            print("---")
-        else:
-            print("The research agent did not find any partners.")
-    elif args.task == "coordinate":
-        print("Starting the Coordinator Agent...")
-=======
 
     print("--- Starting AI Assistant ---")
-
+    
     if args.command == "coordinate":
-main
         coordinator_agent = CoordinatorAgent()
         coordinator_agent.run(task=args.task)
         # We return early for the coordinator as it doesn't follow the research->document workflow
@@ -89,7 +55,7 @@ main
     if not settings:
         print("Could not load settings. Exiting.")
         return
-
+    
     # Initialize Agents
     print("--- Initializing Agents ---")
     research_agent = ResearchAgent(settings)
@@ -114,9 +80,8 @@ main
 
     print("\n--- Main controller received final result: ---")
     print(json.dumps(potential_collaborators, indent=2))
-
+    
     print("\n--- AI Assistant Finished ---")
-
 
 if __name__ == "__main__":
     # Example commands:

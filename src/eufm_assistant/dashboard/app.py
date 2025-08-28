@@ -1,92 +1,44 @@
-feature/interactive-timeline
-from flask import Flask, render_template, request, jsonify
-import yaml
-=======
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
-main
 from eufm_assistant.agents.research_agent import ResearchAgent
 from eufm_assistant.agents.document_agent import DocumentAgent
-from eufm_assistant.agents.monitor.monitor import (
-    get_wbs_data,
-    calculate_compliance_score,
-)
+from eufm_assistant.agents.monitor.monitor import get_wbs_data, calculate_compliance_score
 
-feature/interactive-timeline
-app = Flask(__name__, template_folder="templates", static_folder="static")
-=======
 app = Flask(__name__, template_folder='templates', static_folder='static')
 UPLOAD_FOLDER = 'src/eufm_assistant/dashboard/storage'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-main
 
-
-@app.route("/")
+@app.route('/')
 def index():
     wbs_data = get_wbs_data()
     compliance_score = calculate_compliance_score(wbs_data)
-    return render_template(
-        "index.html", wbs_data=wbs_data, compliance_score=compliance_score
-    )
+    return render_template('index.html', wbs_data=wbs_data, compliance_score=compliance_score)
 
-
-@app.route("/api/timeline")
-def timeline_data():
-    """Provides WBS data formatted for a timeline."""
-    with open("wbs/milestones.yaml", "r") as f:
-        milestones_data = yaml.safe_load(f)
-
-    timeline_events = []
-    if "milestones" in milestones_data:
-        for event in milestones_data["milestones"]:
-            timeline_events.append(
-                {
-                    "due": event.get("date"),
-                    "title": event.get("title"),
-                    "wp": event.get("id"),
-                    "type": "milestone",
-                    "owner": "N/A",
-                }
-            )
-
-    # Sort events by due date
-    timeline_events.sort(key=lambda x: x["due"])
-
-    return jsonify(timeline_events)
-
-
-@app.route("/research", methods=["GET", "POST"])
+@app.route('/research', methods=['GET', 'POST'])
 def research():
-    if request.method == "POST":
-        query = request.form["query"]
+    if request.method == 'POST':
+        query = request.form['query']
         research_agent = ResearchAgent()
         partner_data = research_agent.run(query)
         if partner_data:
             document_agent = DocumentAgent()
             emails = document_agent.draft_outreach_emails(partner_data)
             results = [{"partner": p, "email": e} for p, e in zip(partner_data, emails)]
-            return render_template("research.html", results=results)
+            return render_template('research.html', results=results)
         else:
-            return render_template(
-                "research.html", message="No partners found for the given query."
-            )
-    return render_template("research.html")
+            return render_template('research.html', message="No partners found for the given query.")
+    return render_template('research.html')
 
-
-@app.route("/strategy")
+@app.route('/strategy')
 def strategy():
     try:
-        with open("src/eufm_assistant/docs/Horizon_Xilella.md", "r") as f:
+        with open('src/eufm_assistant/docs/Horizon_Xilella.md', 'r') as f:
             content = f.read()
     except FileNotFoundError:
         content = "Strategy document not found."
-    return render_template("strategy.html", strategy_content=content)
+    return render_template('strategy.html', strategy_content=content)
 
-
-feature/interactive-timeline
-if __name__ == "__main__":
-=======
 @app.route('/documents', methods=['GET', 'POST'])
 def documents():
     if request.method == 'POST':
@@ -103,6 +55,6 @@ def documents():
     docs = os.listdir(app.config['UPLOAD_FOLDER'])
     return render_template('documents.html', documents=docs)
 
+
 if __name__ == '__main__':
-main
     app.run(debug=True, port=8080)

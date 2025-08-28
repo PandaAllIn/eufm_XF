@@ -5,17 +5,11 @@ import pathlib
 # The project root is 3 levels up from this file's directory
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[3]
 
-
 class CoordinatorAgent:
-feature/interactive-timeline
-    def __init__(self, wbs_file_path="src/eufm_assistant/docs/project_wbs.yaml"):
-=======
     def __init__(self, wbs_file_path=None, proposal_path=None):
-main
         """
         Initializes the CoordinatorAgent.
         """
-        # Use robust paths relative to the project root
         self.wbs_file_path = wbs_file_path or PROJECT_ROOT / "wbs" / "wbs.yaml"
         self.proposal_path = proposal_path or PROJECT_ROOT / "Horizon_Xilella.md"
         self.wbs = self._load_wbs()
@@ -36,7 +30,7 @@ main
     def _load_proposal(self):
         """Loads the proposal markdown file."""
         try:
-            with open(self.proposal_path, 'r') as file:
+            with open(self.proposal_path, "r") as file:
                 return file.read()
         except FileNotFoundError:
             print(f"Error: Proposal file not found at {self.proposal_path}")
@@ -46,13 +40,11 @@ main
         """
         Determines the next high-level task based on the current state of the WBS.
         """
-        if not self.wbs or 'wbs' not in self.wbs:
+        if not self.wbs or "wbs" not in self.wbs:
             return "WBS is not loaded or is in an invalid format. Cannot determine next task."
 
-        wbs_data = self.wbs.get('wbs', {})
+        wbs_data = self.wbs.get("wbs", {})
 
-        # This logic is a placeholder for a more sophisticated analysis.
-        # For now, we just check if any work package has an empty task list.
         for wp_id, items in wbs_data.items():
             if not items:
                 return f"Next Action: Define tasks for Work Package '{wp_id}'."
@@ -61,20 +53,6 @@ main
 
     def create_proposal_checklist(self):
         """
-feature/interactive-timeline
-        if not self.wbs or "work_packages" not in self.wbs:
-            return "WBS is not loaded or is invalid. Cannot determine next task."
-
-        # Rule 1: Find a leader for any work package where the leader is 'TBD'.
-        for wp in self.wbs["work_packages"]:
-            if wp.get("leader") == "TBD":
-                return f"Next Action: Find a partner for Work Package '{wp['id']}: {wp['title']}'."
-
-        # Rule 2: If all leaders are defined, check for empty task lists.
-        for wp in self.wbs["work_packages"]:
-            if not wp.get("tasks"):  # Check for empty list or missing key
-                return f"Next Action: Define tasks for Work Package '{wp['id']}: {wp['title']}'."
-=======
         Parses the proposal document and creates a checklist of sections.
         """
         if not self.proposal_content:
@@ -86,31 +64,19 @@ feature/interactive-timeline
 
         checklist = "--- Proposal Section Checklist ---\n"
         for title in headers:
-            indent = "  " if title.strip().startswith("Part") is False else ""
+            indent = "  " if not title.strip().startswith("Part") else ""
             checklist += f"{indent}- [ ] {title.strip()}\n"
-main
 
         checklist += "---------------------------------"
         return checklist
 
-    def run(self, task='wbs_status'):
+    def run(self, task="wbs_status"):
         """
         Runs the coordinator agent to perform a specific task.
         """
-feature/interactive-timeline
-        print("CoordinatorAgent is running...")
-        next_action = self.determine_next_task()
-        print("--- Coordinator Agent Analysis ---")
-        print(next_action)
-        print("---------------------------------")
-        return next_action
-=======
-        print(f"CoordinatorAgent running task: {task}")
-        if task == 'proposal_checklist':
+        if task == "proposal_checklist":
             result = self.create_proposal_checklist()
         else:
             result = self.determine_next_task()
 
-        print(result)
         return result
-main
