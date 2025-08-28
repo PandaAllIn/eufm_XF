@@ -4,6 +4,7 @@ from eufm_assistant.agents.research_agent import ResearchAgent
 from eufm_assistant.agents.document_agent import DocumentAgent
 from eufm_assistant.agents.coordinator_agent import CoordinatorAgent
 
+
 def main():
     parser = argparse.ArgumentParser(description="AI Assistant for EUFM Project")
     parser.add_argument("task", help="The task for the AI assistant to perform.")
@@ -11,7 +12,9 @@ def main():
     args = parser.parse_args()
     if args.task == "find_partners":
         if not args.query:
-            print("Error: The --query argument is required for the 'find_partners' task.")
+            print(
+                "Error: The --query argument is required for the 'find_partners' task."
+            )
             sys.exit(1)
         print(f"Starting the research agent to find partners with query: {args.query}")
         research_agent = ResearchAgent()
@@ -36,6 +39,7 @@ def main():
     else:
         print(f"Unknown task: {args.task}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
