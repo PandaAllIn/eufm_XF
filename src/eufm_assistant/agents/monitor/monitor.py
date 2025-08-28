@@ -1,86 +1,31 @@
-import argparse
-import os
-import pathlib
-import sys
+import yaml
+from datetime import datetime, timezone
 
-from github import Github
+WBS_FILE_PATH = 'src/eufm_assistant/docs/project_wbs.yaml'
 
-from eufm_assistant.agents.monitor.core import (
-    calculate_compliance_score,
-    gar_for_due,
-    load_yaml,
-)
-
-# The project root is now 4 levels up from this file's directory
-PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[4]
-
-
-def render_summary():
-    wbs_file = PROJECT_ROOT / "wbs" / "wbs.yaml"
-    rules_file = PROJECT_ROOT / "src" / "eufm_assistant" / "agents" / "monitor" / "rules" / "compliance_rules.yaml"
-
-    w = load_yaml(wbs_file) or {}
-    rules = load_yaml(rules_file) or {}
-
-    compliance_score = calculate_compliance_score(w, rules)
-
-    lines = ["# Monitor A — GAR Summary", ""]
-    lines.append(f"**Compliance Score**: {compliance_score:.2f}%")
-    lines.append("")
-
-    for wp, items in (w.get("wbs") or {}).items():
-        lines.append(f"## {wp}")
-        for it in items:
-            due = it.get("due", "?")
-            gar = gar_for_due(due)
-            lines.append(
-                f"- **{it.get('id', '?')}** {it.get('title', '')} — due {due} — GAR: **{gar.upper()}**"
-            )
-        lines.append("")
-    return "\n".join(lines)
-
-
-def post_comment_to_latest_pr(body: str) -> int:
-    token = os.getenv("GITHUB_TOKEN")
-    repo_full = os.getenv("GITHUB_REPOSITORY")
-    if not token or not repo_full:
-        print("[post] missing GITHUB_TOKEN or GITHUB_REPOSITORY", file=sys.stderr)
-        return 1
-    gh = Github(token)
-    repo = gh.get_repo(repo_full)
-    pulls = repo.get_pulls(state="open", sort="created", direction="desc")
+def get_wbs_data():
     try:
-        pr = next(iter(pulls))
-    except StopIteration:
-        print("[post] no open PRs to comment on", file=sys.stderr)
+        with open(WBS_FILE_PATH, 'r') as file:
+            return yaml.safe_load(file)
+    except FileNotFoundError:
+        return None
+
+def calculate_compliance_score(wbs_data):
+    if not wbs_data or 'work_packages' not in wbs_data:
         return 0
-    pr.create_issue_comment(body)
-    print(f"[post] commented on PR #{pr.number}", file=sys.stderr)
-    return 0
-
-
-def main(argv=None):
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--dry-run", action="store_true", help="Print summary to stdout"
-    )
-    parser.add_argument(
-        "--emit-status", action="store_true", help="Alias of --dry-run for CI"
-    )
-    parser.add_argument(
-        "--post-comments", action="store_true", help="Post GAR to the latest open PR"
-    )
-    args = parser.parse_args(argv)
-
-    summary = render_summary()
-    print(summary)
-
-    if args.post_comments:
-        post_comment_to_latest_pr(summary)
-    return 0
-
-
-if __name__ == "__main__":
-    # To run this script directly, you must be in the project root and run
-    # `python -m src.eufm_assistant.agents.monitor.monitor`
-    main()
+    total_possible_score, current_score = 0, 0
+    now = datetime.now(timezone.utc)
+    for wp in wbs_data['work_packages']:
+        total_possible_score += 3
+        current_score += 1
+        if wp.get('leader'): current_score += 1
+        if 'tasks' in wp: current_score += 1
+        if 'tasks' in wp:
+            for task in wp['tasks']:
+                total_possible_score += 1
+                if 'end_date' in task and task['end_date']:
+                    if datetime.fromisoformat(task['end_date']) >= now or task.get('status') == 'Completed':
+                        current_score +=1
+                else: current_score += 1
+    if total_possible_score == 0: return 100
+    return int((current_score / total_possible_score) * 100)

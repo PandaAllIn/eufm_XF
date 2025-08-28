@@ -1,63 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Research Assistant</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+<head><meta charset="UTF-8"><title>Research Assistant</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
 <body>
     <div class="container">
-        <h1>AI Research Assistant</h1>
-        <p>Enter a high-level research task below. The AI agent will use this task to find potential collaborators.</p>
-
-        <form action="/research" method="POST" class="research-form">
-            <textarea name="task" rows="3" placeholder="e.g., Find experts in plant pathology in Italy.">{{ task or '' }}</textarea>
-            <button type="submit">Run Research Agent</button>
-        </form>
-
-        {% if error %}
-            <div class="results-container error">
-                <h2>Error</h2>
-                <p>{{ error }}</p>
-            </div>
-        {% endif %}
-
-        {% if results is defined %}
-            <div class="results-container">
-                <h2>Research Results</h2>
-                {% if results %}
-                    <p>Found {{ results|length }} potential collaborator(s) for the task: "<strong>{{ task }}</strong>"</p>
-                    <div class="collaborator-cards">
-                        {% for collaborator in results %}
-                            <div class="card">
-                                <h3>{{ collaborator.name }}</h3>
-                                <p><strong>Role:</strong> {{ collaborator.role or 'Not specified' }}</p>
-                                <p><strong>Affiliation:</strong> {{ collaborator.affiliation or 'Not specified' }}</p>
-                                <p><strong>Email:</strong> {{ collaborator.email or 'Not available' }}</p>
-                                <p><strong>Relevance:</strong> {{ collaborator.summary_of_relevance or 'No summary provided.' }}</p>
-
-                                {% if collaborator.outreach_email %}
-                                <div class="email-draft">
-                                    <details>
-                                        <summary>View Drafted Outreach Email</summary>
-                                        <div class="email-content">
-                                            <p><strong>Subject:</strong> {{ collaborator.outreach_email.subject }}</p>
-                                            <pre>{{ collaborator.outreach_email.body }}</pre>
-                                        </div>
-                                    </details>
-                                </div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
+        <nav><a href="/">Home</a><a href="/research">Research</a><a href="/strategy">Strategy</a></nav>
+        <h1>Research Assistant</h1>
+        <p>Find potential partners for the project.</p>
+        <form action="/research" method="post" class="research-form"><input type="text" name="query" placeholder="e.g., partners in Spain with expertise in olive tree pathology" required><button type="submit">Research</button></form>
+        {% if message %}<p>{{ message }}</p>{% endif %}
+        {% if results %}
+            <h2>Research Results</h2>
+            <div class="research-results">
+                {% for item in results %}
+                    <div class="result">
+                        <h3>{{ item.partner.organisation_name }} ({{ item.partner.country }})</h3>
+                        <p><strong>Project:</strong> {{ item.partner.project_title }} ({{ item.partner.project_acronym }})</p>
+                        <p><strong>Summary:</strong> {{ item.partner.summary }}</p>
+                        <p><strong>Contact:</strong> {{ item.partner.contact_person }}</p>
+                        <h4>Draft Outreach Email:</h4>
+                        <div class="email-draft">{{ item.email }}</div>
                     </div>
-                {% else %}
-                    <p>No potential collaborators were found for the task: "<strong>{{ task }}</strong>"</p>
-                {% endif %}
+                {% endfor %}
             </div>
         {% endif %}
-
-        <a href="/" class="back-link">&larr; Back to Main Dashboard</a>
     </div>
 </body>
 </html>
