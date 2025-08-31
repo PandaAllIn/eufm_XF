@@ -14,5 +14,9 @@
 - `2025-09-01 00:12:08`: Merged all successful branches from the overnight initiative into the main branch.
 - `YYYY-MM-DD HH:MM:SS`: Initializing the project journal.
 
+## Router POC integrated
+- Added automatic agent routing via SmartTaskRouter.
+- Introduced CLI usage with `python -m scripts.route "prompt"` to inspect routing decisions.
+
 ## Open Questions & Blockers
 - None at this time.

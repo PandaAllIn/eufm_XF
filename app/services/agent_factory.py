@@ -5,6 +5,7 @@ from app.agents.document_agent import DocumentAgent
 from app.agents.proposal_agent import ProposalAgent
 from app.agents.coordinator_agent import CoordinatorAgent
 from app.utils.ai_services import AIServices
+from app.services.task_router import route_task, log_routing_decision
 
 class AgentFactory:
     """Factory for creating and configuring AI agents."""
@@ -21,6 +22,14 @@ class AgentFactory:
 
     def create_agent(self, agent_type: str, agent_id: str, agent_config: Dict[str, Any] = None) -> BaseAgent:
         """Create an agent instance of the specified type."""
+
+        if agent_type == "auto":
+            if not agent_config or "prompt" not in agent_config:
+                raise ValueError("Auto agent requires 'prompt' in agent_config")
+            prompt = agent_config.pop("prompt")
+            agent_type, reason = route_task(prompt)
+            log_routing_decision(prompt, agent_type, reason)
+
         agent_class = self._agent_registry.get(agent_type)
         if not agent_class:
             raise ValueError(f"Unknown agent type: {agent_type}")
