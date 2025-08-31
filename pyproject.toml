@@ -1,16 +1,44 @@
-[project]
-name = "eufm_assistant"
+[tool.poetry]
+name = "eufm-assistant"
 version = "0.1.0"
-description = "An AI assistant for managing the EUFM Xylella Fastidiosa project."
-dependencies = [
-    "pyyaml",
-    "requests",
-    "ruff",
-    "pytest",
-    "PyGithub",
-    "Flask",
-    "openai",
-]
+description = "EUFM Assistant for Horizon Europe proposals"
+authors = ["AI Task Force"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "app"}]
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.poetry.dependencies]
+python = "^3.9"
+flask = "*"
+openai = "*"
+google-generativeai = "*"
+pyyaml = "*"
+python-dotenv = "*"
+markdown = "*"
+python-docx = "*"
+pydantic = "*"
+pydantic-settings = "*"
+sqlalchemy = "*"
+alembic = "*"
+requests = "*"
+aiohttp = "*"
+python-json-logger = "*"
+celery = "*"
+redis = "*"
+psycopg2-binary = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+pytest-flask = "*"
+pytest-asyncio = "*"
+pytest-cov = "*"
+black = "*"
+isort = "*"
+flake8 = "*"
+mypy = "*"
+pre-commit = "*"
+ruff = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

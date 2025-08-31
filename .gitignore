@@ -2,3 +2,17 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 build/
+
+# Ignore large binary files
+*.pdf
+*.docx
+
+# Ignore sensitive environment files
+.env
+.gemini/
+
+# Ignore OS-specific files
+.DS_Store
+
+# Ignore logs
+*.log
