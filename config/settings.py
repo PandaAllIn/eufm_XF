@@ -15,9 +15,9 @@ class EnvironmentType(str, Enum):
     PRODUCTION = "production"
 
 class AIServiceSettings(BaseSettings):
-    google_api_key: str = os.getenv("GOOGLE_API_KEY")
-    openai_api_key: str = os.getenv("OPENAI_API_KEY", "not_set")
-    perplexity_api_key: str = os.getenv("PERPLEXITY_API_KEY")
+    google_api_key: str = "AIzaSyBMXkjP7uOjm1bPl5a2l-lABE1sqmvjBwA"
+    openai_api_key: str = "not_set"
+    perplexity_api_key: str = "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"
     default_model: str = "gemini-2.5-pro"
 
 class ApplicationSettings(BaseSettings):

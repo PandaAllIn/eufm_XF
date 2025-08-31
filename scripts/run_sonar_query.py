@@ -4,58 +4,53 @@ import yaml
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Add src to the Python path
+# Add the project root to the Python path
 project_root = Path(__file__).resolve().parents[1]
-sys.path.append(str(project_root / "src"))
+sys.path.insert(0, str(project_root))
 
-from eufm_assistant.utils.ai_services import get_ai_services
-
-def load_settings():
-    """Loads settings from the YAML file and environment variables."""
-    # Load environment variables from .env file
-    load_dotenv(project_root / ".gemini" / ".env")
-    
-    # Load settings from YAML file
-    settings_path = project_root / "src" / "eufm_assistant" / "ai_assistant" / "config" / "settings.yaml"
-    with open(settings_path, "r") as f:
-        settings = yaml.safe_load(f)
-        
-    # Add API keys from environment variables to settings
-    settings["perplexity_api_key"] = os.getenv("PERPLEXITY_API_KEY")
-    
-    return settings
+from app.utils.ai_services import get_ai_services
+from config.settings import get_settings
 
 def main():
     """Runs a specific, detailed query on the Perplexity Sonar API."""
     print("--- Running Sonar Deep Research Query for System Optimization ---")
     
-    settings = load_settings()
+    settings = get_settings()
     
-    if not settings.get("perplexity_api_key"):
-        print("Error: PERPLEXITY_API_KEY not found in .env file.")
-        return
-        
-    ai_services = get_ai_services(settings)
+    ai_services = get_ai_services(settings.ai.dict())
     
     query_prompt = """
-    As an expert in software engineering and AI-driven development workflows, analyze the following project structure and provide a detailed plan for optimization.
-    **Project Goal:** A system to manage and prepare a Horizon Europe funding proposal.
-    **Core Components:**
-    1.  A Python/Flask web dashboard for user interaction.
-    2.  A set of Python-based AI 'agents' for specific tasks (research, document generation, coordination).
-    3.  A centralized `ai_services.py` module that provides access to multiple external AI APIs (Google Gemini, OpenAI Codex, Perplexity Sonar).
-    4.  Configuration is managed via `.yaml` and `.env` files.
-    **Key Challenges:**
-    *   The agent scripts have hardcoded file paths.
-    *   The overall architecture needs to be more robust and scalable for future tasks.
-    *   We need a clean, professional, and maintainable codebase.
+    As an expert AI Systems Analyst, your task is to generate a strategic guide for leveraging the Perplexity Sonar API.
+
+    **Context:**
+    We are an AI Task Force developing a system to manage Horizon Europe funding proposals. We have already integrated your API and have access to the `sonar-reasoning` and `sonar-deep-research` models.
+
+    **Research Sources:**
+    - Your own documentation: https://docs.perplexity.ai/getting-started/overview
+    - Your community forums: https://community.perplexity.ai/
+    - The wider web for best practices in AI research.
+
     **Your Task:**
-    Provide a step-by-step plan to refactor and professionalize this codebase. The plan should include:
-    1.  **Configuration Management:** Best practices for managing settings and API keys, moving away from hardcoded paths. Suggest a specific Python library (e.g., Pydantic, Dynaconf) and provide a brief code example.
-    2.  **Code Structure:** Recommend an improved directory structure for a scalable Python application.
-    3.  **Agent Refactoring:** Propose a design pattern (e.g., Strategy Pattern, Factory Pattern) to refactor the individual agent scripts into a more cohesive and extensible system.
-    4.  **Error Handling & Logging:** Suggest a robust strategy for implementing centralized logging and error handling across the application.
-    5.  **Dependency Management:** Recommend the best tool (`pip-tools`, `Poetry`, `PDM`) for managing Python dependencies to ensure reproducible builds.
+    Create a comprehensive Markdown document that provides a strategic guide for our team. The guide should include:
+
+    1.  **Advanced Prompting Techniques:**
+        *   How to effectively use the `focus` parameter for domain-specific searches (e.g., academic papers, specific news outlets).
+        *   Best practices for structuring prompts to get specific output formats like JSON, Markdown tables, or XML.
+        *   Techniques for "Chain of Thought" or multi-step reasoning with the `sonar-deep-research` model.
+
+    2.  **Optimal Use Cases for Stage 2 Proposal Development:**
+        *   Provide a detailed breakdown of which Sonar model is best suited for the following tasks:
+            *   Conducting a comprehensive scientific literature review.
+            *   Identifying and profiling potential consortium partners (universities, SMEs, research institutes).
+            *   Analyzing the latest EU policy and regulations relevant to our project.
+            *   Performing a competitive analysis of other funded projects.
+
+    3.  **Community Insights & Hidden Gems:**
+        *   Summarize the most valuable tips, tricks, and potential pitfalls you can find from discussions on the Perplexity community forums.
+        *   Identify any "hidden gem" features or undocumented techniques that could give our team a competitive edge.
+
+    4.  **Integration Patterns:**
+        *   Propose a simple Python code pattern for a "meta-agent" that can take a high-level goal (e.g., "analyze competitor X") and break it down into a series of optimized prompts for the Sonar API.
     """
     
     print(f"\nSending query to sonar-deep-research...")
@@ -67,7 +62,7 @@ def main():
     print("------------------------------------")
     
     # Save the response to a file for future reference
-    response_file = project_root / "docs" / "system_optimization_plan.md"
+    response_file = project_root / "docs" / "PERPLEXITY_STRATEGY.md"
     with open(response_file, "w") as f:
         f.write(response)
     print(f"\nOptimization plan saved to: {response_file}")

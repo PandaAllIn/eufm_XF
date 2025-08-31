@@ -4,6 +4,8 @@ from typing import Dict, Any
 from app.agents.base_agent import BaseAgent, AgentStatus
 from config.settings import get_settings
 
+from app.utils.journal import log_decision
+
 class CoordinatorAgent(BaseAgent):
     """An agent responsible for project coordination and status checks."""
 
@@ -14,6 +16,7 @@ class CoordinatorAgent(BaseAgent):
         self.proposal_path = self.settings.app.PROJECT_ROOT / "eufm" / "Stage1_Proposal_Cline_Enhanced.md"
         self.wbs = self._load_wbs()
         self.proposal_content = self._load_proposal()
+        log_decision("CoordinatorAgent initialized.")
 
     def _load_wbs(self):
         """Loads the WBS data from the YAML file."""
