@@ -37,6 +37,7 @@ isort = "*"
 flake8 = "*"
 mypy = "*"
 pre-commit = "*"
+ruff = "*"
 
 [build-system]
 requires = ["poetry-core"]
