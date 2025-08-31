@@ -1,7 +1,0 @@
-pyyaml
-requests
-ruff
-pytest
-PyGithub
-Flask
-openai
