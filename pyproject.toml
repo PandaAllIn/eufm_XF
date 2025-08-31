@@ -5,6 +5,7 @@ description = "EUFM Assistant for Horizon Europe proposals"
 authors = ["AI Task Force"]
 license = "MIT"
 readme = "README.md"
+packages = [{include = "app"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -36,6 +37,7 @@ isort = "*"
 flake8 = "*"
 mypy = "*"
 pre-commit = "*"
+ruff = "*"
 
 [build-system]
 requires = ["poetry-core"]
