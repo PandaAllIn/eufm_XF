@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Proposal Generator - EUFM Assistant{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-file-alt"></i> Horizon Europe Proposal Generator</h2>
+            <div class="alert alert-danger mb-0">
+                <strong><i class="fas fa-clock"></i> URGENT:</strong> Stage 1 Due September 4, 2025
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-rocket"></i> Stage 1 Proposal (10 pages)</h5>
+            </div>
+            <div class="card-body">
+                <p>Generate the Stage 1 proposal for:</p>
+                <strong>HORIZON-CL6-2025-02-FARM2FORK-01-two-stage</strong><br>
+                <em>Emerging and future risks to plant health</em>
+                
+                <form method="POST" class="mt-3">
+                    <input type="hidden" name="action" value="generate_stage1">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-magic"></i> Generate Stage 1 Proposal
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5><i class="fas fa-check-circle"></i> Compliance Check</h5>
+            </div>
+            <div class="card-body">
+                <p>Check proposal compliance with Horizon Europe requirements</p>
+                
+                <form method="POST" class="mt-3">
+                    <input type="hidden" name="action" value="check_compliance">
+                    <button type="submit" class="btn btn-info btn-lg">
+                        <i class="fas fa-search"></i> Check Compliance
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if compliance %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5><i class="fas fa-exclamation-triangle"></i> Compliance Report</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <strong>Deadline Status:</strong> {{ compliance.deadline_status }}
+                </div>
+                
+                <h6>Required Sections:</h6>
+                <ul>
+                    {% for section, status in compliance.required_sections.items() %}
+                    <li><strong>{{ section.title() }}:</strong> {{ status }}</li>
+                    {% endfor %}
+                </ul>
+                
+                <h6>Critical Actions:</h6>
+                <ul>
+                    {% for action in compliance.critical_actions %}
+                    <li>{{ action }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if stage1_content and generated %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h5><i class="fas fa-file-text"></i> Generated Stage 1 Proposal</h5>
+                <div>
+                    <button class="btn btn-light btn-sm" onclick="copyToClipboard()">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-light btn-sm" onclick="downloadProposal()">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="proposal-content" style="max-height: 600px; overflow-y: auto; white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.9em;">{{ stage1_content }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if not generated and not compliance %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5><i class="fas fa-info-circle"></i> Project Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Call Details:</h6>
+                        <ul>
+                            <li><strong>Call ID:</strong> HORIZON-CL6-2025-02-FARM2FORK-01-two-stage</li>
+                            <li><strong>Title:</strong> Emerging and future risks to plant health</li>
+                            <li><strong>Type:</strong> Research and Innovation Action (RIA)</li>
+                            <li><strong>Budget:</strong> ~€6 million EU contribution</li>
+                            <li><strong>Duration:</strong> 48 months</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Key Features:</h6>
+                        <ul>
+                            <li>Two-stage submission process</li>
+                            <li>Blind evaluation for Stage 1</li>
+                            <li>Lump-sum funding model</li>
+                            <li>Multi-actor approach required</li>
+                            <li>Focus on novel solutions</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mt-3">
+                    <h6><i class="fas fa-lightbulb"></i> Our Approach:</h6>
+                    <p>Novel phosphinic acid derivatives as systemic bactericides against <em>Xylella fastidiosa</em> - 
+                    the first potential cure for this devastating plant pathogen affecting European agriculture.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyToClipboard() {
+    const content = document.getElementById('proposal-content').textContent;
+    navigator.clipboard.writeText(content).then(function() {
+        alert('Proposal content copied to clipboard!');
+    });
+}
+
+function downloadProposal() {
+    const content = document.getElementById('proposal-content').textContent;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'EUFM_Stage1_Proposal_' + new Date().toISOString().split('T')[0] + '.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+</script>
+{% endblock %}

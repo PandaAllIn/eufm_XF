@@ -1,0 +1,1 @@
+The content of the Horizon Europe Programme Guide could not be fully retrieved from the provided URL. The fetched content was: 'Topic List'. This indicates the URL might not contain the full guide or is a dynamic page. Further investigation or an alternative source is needed.

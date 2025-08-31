@@ -1,8 +1,0 @@
-# AI Assistant Settings
-#
-# Please add your OpenAI API key below.
-# The AI assistant will not be able to function without it.
-# You can get your key from: https://platform.openai.com/api-keys
-
-openai_api_key: "dummy"
-llm_model: "gpt-4o"
