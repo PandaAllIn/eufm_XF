@@ -5,9 +5,11 @@ from enum import Enum
 
 class AgentStatus(Enum):
     IDLE = "idle"
+    QUEUED = "queued"
     RUNNING = "running"
     COMPLETED = "completed"
     FAILED = "failed"
+    CANCELLED = "cancelled"
 
 class BaseAgent(ABC):
     """Abstract base class for all AI agents in the EUFM system."""
@@ -23,6 +25,18 @@ class BaseAgent(ABC):
     @abstractmethod
     def run(self, parameters: Dict[str, Any]) -> Any:
         """The main entry point for the agent's execution logic."""
+        pass
+
+    def on_start(self):
+        """Lifecycle hook called when the agent starts running."""
+        pass
+
+    def on_success(self):
+        """Lifecycle hook called when the agent completes successfully."""
+        pass
+
+    def on_failure(self, error: Exception):
+        """Lifecycle hook called when the agent fails."""
         pass
 
     def get_status(self) -> Dict[str, Any]:
