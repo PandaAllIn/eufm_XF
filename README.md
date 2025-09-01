@@ -34,21 +34,21 @@ eufm/
    ```bash
    poetry install
    ```
-3. **Run the application**:
+3. **Run the unified CLI**:
    ```bash
-   poetry run python launch_eufm.py
+   poetry run eufm --help
    ```
 
 ## Usage Examples
-- **Generate a proposal draft**
+- **Route a task to an agent**
   ```bash
-  poetry run python generate_proposal.py
+  poetry run eufm route "Find partners in Italy"
   ```
 - **Run the research agent**
   ```bash
-  poetry run python app/agents/research_agent.py "Find partners in Italy"
+  poetry run eufm research "Find partners in Italy"
   ```
-- **Execute the monitoring system in dry-run mode**
+- **Generate proposal content**
   ```bash
-  poetry run python app/agents/monitor/monitor.py --dry-run
+  poetry run eufm propose
   ```
