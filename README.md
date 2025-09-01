@@ -52,3 +52,9 @@ eufm/
   ```bash
   poetry run python app/agents/monitor/monitor.py --dry-run
   ```
+
+## Testing
+Run the integration test suite to exercise the full agent workflow:
+```bash
+poetry run pytest tests/integration -q
+```
