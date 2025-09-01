@@ -13,6 +13,7 @@
 - `2025-09-01 00:12:08`: Implemented the failed 'Milestone Archive' task.
 - `2025-09-01 00:12:08`: Merged all successful branches from the overnight initiative into the main branch.
 - `YYYY-MM-DD HH:MM:SS`: Initializing the project journal.
+- `YYYY-MM-DD HH:MM:SS`: Unified CLI entrypoints and deprecated legacy launcher.
 
 ## Open Questions & Blockers
 - None at this time.

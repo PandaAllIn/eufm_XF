@@ -3,6 +3,7 @@ from typing import Dict, Any
 import logging
 from enum import Enum
 
+
 class AgentStatus(Enum):
     IDLE = "idle"
     QUEUED = "queued"
@@ -10,6 +11,7 @@ class AgentStatus(Enum):
     COMPLETED = "completed"
     FAILED = "failed"
     CANCELLED = "cancelled"
+
 
 class BaseAgent(ABC):
     """Abstract base class for all AI agents in the EUFM system."""
@@ -26,6 +28,22 @@ class BaseAgent(ABC):
     def run(self, parameters: Dict[str, Any]) -> Any:
         """The main entry point for the agent's execution logic."""
         pass
+
+    def execute(self, parameters: Dict[str, Any]) -> Any:
+        """Execute the agent with lifecycle hooks and status management."""
+        self.status = AgentStatus.RUNNING
+        self.on_start()
+        try:
+            result = self.run(parameters)
+            self.result = result
+            self.status = AgentStatus.COMPLETED
+            self.on_success()
+            return result
+        except Exception as e:
+            self.error = str(e)
+            self.status = AgentStatus.FAILED
+            self.on_failure(e)
+            raise
 
     def on_start(self):
         """Lifecycle hook called when the agent starts running."""

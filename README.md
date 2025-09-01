@@ -22,7 +22,7 @@ eufm/
 ├── config/            # Configuration files
 ├── docs/              # Project documentation
 ├── scripts/           # Utility scripts
-└── launch_eufm.py     # Entry point for the web dashboard
+└── launch_eufm.py     # Legacy entry point (delegates to CLI)
 ```
 
 ## Getting Started
@@ -34,21 +34,22 @@ eufm/
    ```bash
    poetry install
    ```
-3. **Run the application**:
+3. **Explore the unified CLI**:
    ```bash
-   poetry run python launch_eufm.py
+   poetry run eufm --help
    ```
 
 ## Usage Examples
-- **Generate a proposal draft**
+- **Route a task to the best agent**
   ```bash
-  poetry run python generate_proposal.py
+  poetry run eufm route "Research funding opportunities"
   ```
-- **Run the research agent**
+- **Run a specific agent**
   ```bash
-  poetry run python app/agents/research_agent.py "Find partners in Italy"
+  poetry run eufm run-agent research --param query="Find partners in Italy"
   ```
-- **Execute the monitoring system in dry-run mode**
+- **Use specialized shortcuts**
   ```bash
-  poetry run python app/agents/monitor/monitor.py --dry-run
+  poetry run eufm research "Find partners in Italy"
+  poetry run eufm propose
   ```
