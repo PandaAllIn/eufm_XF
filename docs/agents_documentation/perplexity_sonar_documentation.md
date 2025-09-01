@@ -19,14 +19,14 @@ The Perplexity API is **fully compatible with the OpenAI Chat Completions format
 
 ### Implementation Steps:
 
-1.  **Add a new method to `ai_services.py`:** A new method, `query_perplexity_sonar`, will be added to our `src/eufm_assistant/utils/ai_services.py` module.
+1.  **Add a new method to `ai_services.py`:** A new method, `query_perplexity_sonar`, will be added to our `app/utils/ai_services.py` module.
 2.  **Use OpenAI Client Libraries:** This new method will leverage the existing `openai` Python library. The only change required is to point the client to the Perplexity API endpoint.
 3.  **API Key Management:** The Perplexity API key will be added to our `.env` file and managed through our existing settings configuration.
 
 ### Example Code for `ai_services.py`:
 
 ```python
-# In src/eufm_assistant/utils/ai_services.py
+# In app/utils/ai_services.py
 
 from openai import OpenAI
 

@@ -1,5 +1,5 @@
 import unittest
-from eufm_assistant.agents.monitor.monitor import calculate_compliance_score
+from app.agents.monitor.monitor import calculate_compliance_score
 
 
 class TestMonitor(unittest.TestCase):
