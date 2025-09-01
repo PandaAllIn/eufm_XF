@@ -11,19 +11,8 @@ It automates project documentation, partner research, and monitoring so teams ca
 - **Monitoring tools** to track deadlines and project health.
 - **Extensible architecture** built with Python and Flask.
 
-## Architecture Diagram
-```
-eufm/
-├── app/               # Core application package
-│   ├── agents/        # Research, proposal, and monitor agents
-│   ├── api/           # REST API endpoints
-│   ├── models/        # Database models
-│   └── services/      # Business logic
-├── config/            # Configuration files
-├── docs/              # Project documentation
-├── scripts/           # Utility scripts
-└── launch_eufm.py     # Entry point for the web dashboard
-```
+## System Architecture
+See [docs/system_architecture.md](docs/system_architecture.md) for a comprehensive overview of the current architecture and developer guidelines.
 
 ## Getting Started
 1. **Install Poetry** (if not already installed):
