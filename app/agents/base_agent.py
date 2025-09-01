@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any
-import logging
 from enum import Enum
+import logging
+from typing import Any, Dict, Optional
+
+from app.utils.telemetry import telemetry_logger
 
 class AgentStatus(Enum):
     IDLE = "idle"
@@ -38,6 +40,48 @@ class BaseAgent(ABC):
     def on_failure(self, error: Exception):
         """Lifecycle hook called when the agent fails."""
         pass
+
+    def execute(
+        self,
+        parameters: Dict[str, Any],
+        run_id: Optional[str] = None,
+        task_id: Optional[str] = None,
+    ) -> Any:
+        """Execute the agent with telemetry and status management."""
+        self.status = AgentStatus.RUNNING
+        self.on_start()
+        telemetry_logger.log(
+            run_id=run_id,
+            task_id=task_id,
+            agent_id=self.agent_id,
+            event_type="start",
+            status=self.status.value,
+        )
+        try:
+            self.result = self.run(parameters)
+            self.status = AgentStatus.COMPLETED
+            self.on_success()
+            telemetry_logger.log(
+                run_id=run_id,
+                task_id=task_id,
+                agent_id=self.agent_id,
+                event_type="success",
+                status=self.status.value,
+            )
+            return self.result
+        except Exception as exc:  # pragma: no cover - simple wrapper
+            self.status = AgentStatus.FAILED
+            self.error = str(exc)
+            self.on_failure(exc)
+            telemetry_logger.log(
+                run_id=run_id,
+                task_id=task_id,
+                agent_id=self.agent_id,
+                event_type="failure",
+                status=self.status.value,
+                error=self.error,
+            )
+            raise
 
     def get_status(self) -> Dict[str, Any]:
         """Returns the current status and result of the agent."""
