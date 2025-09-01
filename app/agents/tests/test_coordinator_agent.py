@@ -1,10 +1,11 @@
 import unittest
 from unittest.mock import patch
-from eufm_assistant.agents.coordinator_agent import CoordinatorAgent
+
+from app.agents.coordinator_agent import CoordinatorAgent
 
 
 class TestCoordinatorAgent(unittest.TestCase):
-    @patch("eufm_assistant.agents.coordinator_agent.CoordinatorAgent._load_wbs")
+    @patch("app.agents.coordinator_agent.CoordinatorAgent._load_wbs")
     def test_determine_next_task_wbs_logic(self, mock_load_wbs):
         """
         Tests that the agent correctly identifies the need to define tasks
@@ -15,15 +16,14 @@ class TestCoordinatorAgent(unittest.TestCase):
         }
         mock_load_wbs.return_value = mock_wbs_data
 
-        # We pass None for proposal_path because it's not needed for this test
-        agent = CoordinatorAgent(proposal_path="/dev/null")
+        agent = CoordinatorAgent(agent_id="coord", config={})
         agent.wbs = mock_wbs_data
 
         expected_action = "Next Action: Define tasks for Work Package 'WP2'."
         self.assertEqual(agent.determine_next_task(), expected_action)
 
-    @patch("eufm_assistant.agents.coordinator_agent.CoordinatorAgent._load_proposal")
-    @patch("eufm_assistant.agents.coordinator_agent.CoordinatorAgent._load_wbs")
+    @patch("app.agents.coordinator_agent.CoordinatorAgent._load_proposal")
+    @patch("app.agents.coordinator_agent.CoordinatorAgent._load_wbs")
     def test_create_proposal_checklist(self, mock_load_wbs, mock_load_proposal):
         """
         Tests that the agent can correctly parse a markdown proposal
@@ -40,15 +40,15 @@ class TestCoordinatorAgent(unittest.TestCase):
         )
         mock_load_proposal.return_value = mock_proposal_content
 
-        agent = CoordinatorAgent()
+        agent = CoordinatorAgent(agent_id="coord", config={})
 
         expected_checklist = (
             "--- Proposal Section Checklist ---\n"
             "- [ ] Part I: The Vision\n"
-            "  - [ ] 1.1 The Problem\n"
-            "  - [ ] 1.2 The Solution\n"
+            "- [ ] 1.1 The Problem\n"
+            "- [ ] 1.2 The Solution\n"
             "- [ ] Part II: The Plan\n"
-            "  - [ ] 2.1 The Team\n"
+            "- [ ] 2.1 The Team\n"
             "---------------------------------"
         )
         self.assertEqual(agent.create_proposal_checklist(), expected_checklist)

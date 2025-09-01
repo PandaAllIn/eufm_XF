@@ -1,14 +1,23 @@
+import asyncio
 import json
+import warnings
 from typing import Dict, Any, List
+
 from app.agents.base_agent import BaseAgent, AgentStatus
-from app.utils.ai_services import AIServices
+from app.utils.ai_services import AIServices, get_ai_services
+
 
 class ResearchAgent(BaseAgent):
     """An agent that conducts research by generating and executing a plan."""
 
-    def __init__(self, agent_id: str, config: Dict[str, Any], ai_services: AIServices):
+    def __init__(
+        self,
+        agent_id: str,
+        config: Dict[str, Any],
+        ai_services: AIServices | None = None,
+    ):
         super().__init__(agent_id, config)
-        self.ai_services = ai_services
+        self.ai_services = ai_services or get_ai_services()
 
     def generate_research_plan(self, query: str) -> List[Dict[str, str]]:
         """Generates a research plan using an AI model."""
@@ -22,14 +31,25 @@ class ResearchAgent(BaseAgent):
             {{"tool": "google_search", "query": "site:cordis.europa.eu xylella fastidiosa research projects spain"}}
         ]
         """
-        # For this refactoring, we will use the Perplexity Sonar for this task
-        response_str = self.ai_services.query_perplexity_sonar(prompt, model="sonar-reasoning")
+        response_str = asyncio.run(
+            self.ai_services.query_perplexity_sonar(prompt, model="sonar-reasoning")
+        )
         try:
             plan = json.loads(response_str)
             return plan.get("steps", [])
         except json.JSONDecodeError:
             self.logger.error("Failed to decode JSON from research plan response.")
             return []
+
+    def generate_research_plan_direct(
+        self, query: str
+    ) -> List[Dict[str, str]]:  # pragma: no cover - deprecated
+        warnings.warn(
+            "generate_research_plan_direct is deprecated; use generate_research_plan",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.generate_research_plan(query)
 
     def execute_research_plan(self, plan: List[Dict[str, str]]) -> List[Dict[str, Any]]:
         """Executes the research plan. (Currently mocked)"""
@@ -64,7 +84,7 @@ class ResearchAgent(BaseAgent):
         try:
             plan = self.generate_research_plan(query)
             results = self.execute_research_plan(plan)
-            
+
             self.result = results
             self.status = AgentStatus.COMPLETED
             self.logger.info(f"Research completed for query: {query}")

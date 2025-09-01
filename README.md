@@ -52,3 +52,16 @@ eufm/
   ```bash
   poetry run python app/agents/monitor/monitor.py --dry-run
   ```
+
+## Configuration
+
+Agents interact with external providers via the unified `ai_services` module.
+API keys are read from environment variables using Pydantic settings. Set the
+following variables before running agents:
+
+- `OPENAI_API_KEY`
+- `GOOGLE_API_KEY`
+- `PERPLEXITY_API_KEY`
+
+The `ai_services` helpers are asynchronous; synchronous agents call them using
+`asyncio.run`.
