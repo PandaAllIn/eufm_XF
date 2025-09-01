@@ -52,3 +52,13 @@ eufm/
   ```bash
   poetry run python app/agents/monitor/monitor.py --dry-run
   ```
+
+## Perplexity Sonar Integration
+The research agent uses the [Perplexity API](https://docs.perplexity.ai/docs/getting-started) for plan generation. 
+Set your API key in the environment:
+```bash
+export PERPLEXITY_API_KEY="your-key"
+```
+
+When querying, you can select from models such as `sonar`, `sonar-reasoning` (default), or `sonar-deep-research`. The
+`PerplexityService` in `app/utils/services/perplexity_service.py` wraps these calls.
