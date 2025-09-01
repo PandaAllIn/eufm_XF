@@ -3,6 +3,8 @@ This module provides a centralized interface for interacting with various AI ser
 """
 
 from openai import OpenAI
+from app.utils.horizon_guide import query_guide
+
 
 class AIServices:
     def __init__(self, settings):
@@ -48,6 +50,10 @@ class AIServices:
         except Exception as e:
             print(f"--- Error querying Perplexity Sonar: {str(e)} ---")
             return f"Error: Could not get a response from Perplexity Sonar. Details: {str(e)}"
+
+    def query_programme_guide(self, topic: str) -> str:
+        """Search the Horizon Europe Programme Guide summary for a topic."""
+        return query_guide(topic)
 
 def get_ai_services(settings):
     """
