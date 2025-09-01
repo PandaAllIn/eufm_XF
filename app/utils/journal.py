@@ -1,6 +1,7 @@
 import datetime
 import re
 import os
+from app.exceptions import ResourceNotFoundError
 
 # Construct the absolute path to the project root
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -11,10 +12,12 @@ def _read_journal():
     try:
         with open(JOURNAL_FILE, "r") as f:
             return f.read()
-    except FileNotFoundError:
+    except FileNotFoundError as exc:
         # If the journal doesn't exist, we can start with a template.
         # For this implementation, we'll assume it's created and raise an error.
-        raise FileNotFoundError(f"Journal file not found at {JOURNAL_FILE}")
+        raise ResourceNotFoundError(
+            f"Journal file not found at {JOURNAL_FILE}"
+        ) from exc
 
 def _write_journal(content):
     """Writes content to the journal file."""

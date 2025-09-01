@@ -1,10 +1,14 @@
 from typing import Dict, Any, Type, List
+import logging
 from app.agents.base_agent import BaseAgent
 from app.agents.research_agent import ResearchAgent
 from app.agents.document_agent import DocumentAgent
 from app.agents.proposal_agent import ProposalAgent
 from app.agents.coordinator_agent import CoordinatorAgent
 from app.utils.ai_services import AIServices
+from app.exceptions import ConfigurationError
+
+logger = logging.getLogger(__name__)
 
 class AgentFactory:
     """Factory for creating and configuring AI agents."""
@@ -23,7 +27,10 @@ class AgentFactory:
         """Create an agent instance of the specified type."""
         agent_class = self._agent_registry.get(agent_type)
         if not agent_class:
-            raise ValueError(f"Unknown agent type: {agent_type}")
+            logger.error(
+                f"{ConfigurationError.__name__}: Unknown agent type '{agent_type}'"
+            )
+            raise ConfigurationError(f"Unknown agent type: {agent_type}")
 
         # Combine base config with agent-specific config
         final_config = self.base_config.copy()

@@ -10,7 +10,8 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent
 sys.path.insert(0, str(project_root))
 
-from app import create_app
+from app import create_app  # noqa: E402
+from app.exceptions import EUFMAssistantException  # noqa: E402
 
 def main():
     """Launch the EUFM Assistant system using the application factory."""
@@ -40,6 +41,8 @@ def main():
         # Run Flask app using the development server
         # For production, a proper WSGI server like Gunicorn should be used.
         app.run(host="0.0.0.0", port=5000, debug=settings.DEBUG if settings else True)
+    except EUFMAssistantException as e:
+        print(f"Application error: {e.__class__.__name__}: {e}")
     except KeyboardInterrupt:
         print("\n\n🛑 EUFM Assistant stopped")
         print("Thank you for using EUFM Assistant!")

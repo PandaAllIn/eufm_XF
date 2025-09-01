@@ -1,9 +1,9 @@
-import yaml
 from typing import Dict, Any
 import google.generativeai as genai
 from app.agents.base_agent import BaseAgent, AgentStatus
 from app.utils.ai_services import AIServices
 from config.settings import get_settings
+from app.exceptions import AgentExecutionError
 
 class ProposalAgent(BaseAgent):
     """Agent responsible for generating Horizon Europe proposals."""
@@ -40,5 +40,11 @@ class ProposalAgent(BaseAgent):
         except Exception as e:
             self.error = str(e)
             self.status = AgentStatus.FAILED
-            self.logger.error(f"Failed to retrieve proposal content: {e}")
-            raise
+            self.logger.error(
+                f"Failed to retrieve proposal content: {e.__class__.__name__}: {e}"
+            )
+            raise AgentExecutionError(
+                "Failed to retrieve proposal content",
+                agent_type="proposal",
+                agent_id=self.agent_id,
+            ) from e
