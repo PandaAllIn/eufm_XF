@@ -2,6 +2,7 @@ import json
 from typing import Dict, Any, List
 from app.agents.base_agent import BaseAgent, AgentStatus
 from app.utils.ai_services import AIServices
+from app.exceptions import ValidationError, AgentExecutionError
 
 class ResearchAgent(BaseAgent):
     """An agent that conducts research by generating and executing a plan."""
@@ -57,8 +58,8 @@ class ResearchAgent(BaseAgent):
         if not query:
             self.error = "Missing 'query' parameter."
             self.status = AgentStatus.FAILED
-            self.logger.error(self.error)
-            raise ValueError(self.error)
+            self.logger.error(f"{ValidationError.__name__}: {self.error}")
+            raise ValidationError(self.error)
 
         self.logger.info(f"Starting research for query: {query}")
         try:
@@ -72,5 +73,11 @@ class ResearchAgent(BaseAgent):
         except Exception as e:
             self.error = str(e)
             self.status = AgentStatus.FAILED
-            self.logger.error(f"Research failed for query '{query}': {e}")
-            raise
+            self.logger.error(
+                f"Research failed for query '{query}': {e.__class__.__name__}: {e}"
+            )
+            raise AgentExecutionError(
+                f"Research failed for query '{query}'",
+                agent_type="research",
+                agent_id=self.agent_id,
+            ) from e

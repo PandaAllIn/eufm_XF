@@ -5,6 +5,7 @@ from app.agents.base_agent import BaseAgent, AgentStatus
 from config.settings import get_settings
 
 from app.utils.journal import log_decision
+from app.exceptions import AgentExecutionError
 
 class CoordinatorAgent(BaseAgent):
     """An agent responsible for project coordination and status checks."""
@@ -96,5 +97,11 @@ class CoordinatorAgent(BaseAgent):
         except Exception as e:
             self.error = str(e)
             self.status = AgentStatus.FAILED
-            self.logger.error(f"Task '{task}' failed: {e}")
-            raise
+            self.logger.error(
+                f"Task '{task}' failed: {e.__class__.__name__}: {e}"
+            )
+            raise AgentExecutionError(
+                f"Task '{task}' failed",
+                agent_type="coordinator",
+                agent_id=self.agent_id,
+            ) from e

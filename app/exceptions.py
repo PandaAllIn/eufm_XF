@@ -36,3 +36,8 @@ class AgentExecutionError(EUFMAssistantException):
 class ConfigurationError(EUFMAssistantException):
     """Raised when configuration is invalid or missing."""
     pass
+
+
+class ResourceNotFoundError(EUFMAssistantException):
+    """Raised when an expected resource such as a file is missing."""
+    pass

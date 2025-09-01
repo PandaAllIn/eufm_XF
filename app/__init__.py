@@ -28,6 +28,7 @@ def create_app():
     # Register global error handler
     @app.errorhandler(EUFMAssistantException)
     def handle_app_exception(error):
+        app.logger.error(f"{error.__class__.__name__}: {error}")
         response = jsonify(error.to_dict())
         response.status_code = 400  # Or a more specific code
         return response

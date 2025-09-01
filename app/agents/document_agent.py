@@ -2,6 +2,7 @@ from openai import OpenAI
 from typing import Dict, Any, List
 from app.agents.base_agent import BaseAgent, AgentStatus
 from config.settings import get_settings
+from app.exceptions import ValidationError, AgentExecutionError
 
 class DocumentAgent(BaseAgent):
     """An agent for drafting documents, such as outreach emails."""
@@ -63,8 +64,10 @@ class DocumentAgent(BaseAgent):
         if not partner_data or not isinstance(partner_data, list):
             self.error = "Missing or invalid 'partner_data' parameter."
             self.status = AgentStatus.FAILED
-            self.logger.error(self.error)
-            raise ValueError(self.error)
+            self.logger.error(
+                f"{ValidationError.__name__}: {self.error}"
+            )
+            raise ValidationError(self.error)
 
         self.logger.info(f"Drafting outreach emails for {len(partner_data)} partner(s).")
         
@@ -74,8 +77,14 @@ class DocumentAgent(BaseAgent):
             self.status = AgentStatus.COMPLETED
             self.logger.info("Successfully drafted outreach emails.")
             return result
-        except Exception as e:
+        except Exception as e:  # pragma: no cover - network errors not deterministic
             self.error = str(e)
             self.status = AgentStatus.FAILED
-            self.logger.error(f"Failed to draft emails: {e}")
-            raise
+            self.logger.error(
+                f"Failed to draft emails: {e.__class__.__name__}: {e}"
+            )
+            raise AgentExecutionError(
+                f"Failed to draft outreach emails: {e}",
+                agent_type="document",
+                agent_id=self.agent_id,
+            ) from e
