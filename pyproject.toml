@@ -39,6 +39,9 @@ mypy = "*"
 pre-commit = "*"
 ruff = "*"
 
+[tool.poetry.scripts]
+eufm = "app.cli.main:main"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

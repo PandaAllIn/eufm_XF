@@ -91,3 +91,14 @@ class BaseAgent(ABC):
             "result": self.result,
             "error": self.error,
         }
+
+    def execute(self, parameters: Dict[str, Any]) -> Any:
+        """Public method to execute the agent with lifecycle hooks."""
+        try:
+            self.on_start()
+            result = self.run(parameters)
+            self.on_success()
+            return result
+        except Exception as e:
+            self.on_failure(e)
+            raise
