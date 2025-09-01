@@ -1,10 +1,11 @@
 import yaml
 import re
 from typing import Dict, Any
-from app.agents.base_agent import BaseAgent, AgentStatus
+from app.agents.base_agent import BaseAgent
 from config.settings import get_settings
 
 from app.utils.journal import log_decision
+
 
 class CoordinatorAgent(BaseAgent):
     """An agent responsible for project coordination and status checks."""
@@ -13,7 +14,11 @@ class CoordinatorAgent(BaseAgent):
         super().__init__(agent_id, config)
         self.settings = get_settings()
         self.wbs_file_path = self.settings.app.WBS_DIR / "wbs.yaml"
-        self.proposal_path = self.settings.app.PROJECT_ROOT / "eufm" / "Stage1_Proposal_Cline_Enhanced.md"
+        self.proposal_path = (
+            self.settings.app.PROJECT_ROOT
+            / "eufm"
+            / "Stage1_Proposal_Cline_Enhanced.md"
+        )
         self.wbs = self._load_wbs()
         self.proposal_content = self._load_proposal()
         log_decision("CoordinatorAgent initialized.")
@@ -75,26 +80,10 @@ class CoordinatorAgent(BaseAgent):
         return checklist
 
     def run(self, parameters: Dict[str, Any]) -> Any:
-        """
-        Runs the coordinator agent to perform a specific task.
-        Supported tasks: 'wbs_status', 'proposal_checklist'
-        """
-        self.status = AgentStatus.RUNNING
+        """Runs the coordinator agent to perform a specific task."""
         task = parameters.get("task", "wbs_status")
         self.logger.info(f"Executing task: {task}")
 
-        try:
-            if task == "proposal_checklist":
-                result = self.create_proposal_checklist()
-            else:
-                result = self.determine_next_task()
-            
-            self.result = result
-            self.status = AgentStatus.COMPLETED
-            self.logger.info(f"Task '{task}' completed successfully.")
-            return result
-        except Exception as e:
-            self.error = str(e)
-            self.status = AgentStatus.FAILED
-            self.logger.error(f"Task '{task}' failed: {e}")
-            raise
+        if task == "proposal_checklist":
+            return self.create_proposal_checklist()
+        return self.determine_next_task()

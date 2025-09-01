@@ -1,4 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, session, flash
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    jsonify,
+    session,
+    flash,
+)
 from werkzeug.utils import secure_filename
 import os
 import yaml
@@ -10,14 +19,11 @@ from eufm_assistant.agents.monitor.monitor import (
     get_wbs_data,
     calculate_compliance_score,
 )
-from eufm_assistant.auth.simple_auth import (
-    login_required,
-    authenticate_user,
-    generate_session_key,
-)
+from eufm_assistant.auth.simple_auth import authenticate_user
 
 # The project root is 3 levels up from this file's directory
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[3]
+
 
 def load_settings():
     """Loads settings from the YAML file."""
@@ -39,6 +45,7 @@ def load_settings():
         print(f"Error parsing settings YAML file: {e}")
         return None
 
+
 app = Flask(__name__, template_folder="templates", static_folder="static")
 UPLOAD_FOLDER = "src/eufm_assistant/dashboard/storage"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -50,7 +57,7 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        
+
         if authenticate_user(username, password):
             session["logged_in"] = True
             session["username"] = username
@@ -58,14 +65,16 @@ def login():
             return redirect(url_for("index"))
         else:
             flash("Invalid credentials!", "error")
-    
+
     return render_template("login.html")
+
 
 @app.route("/logout")
 def logout():
     session.clear()
     flash("Successfully logged out!", "success")
     return redirect(url_for("login"))
+
 
 @app.route("/")
 def index():
@@ -89,15 +98,13 @@ def research():
         research_agent = ResearchAgent(settings)
         # Since the research agent is mocked, this will return mock data.
         # In a real scenario, this would perform a search.
-        partner_data = research_agent.run(query)
+        partner_data = research_agent.execute({"query": query})
 
         if partner_data:
             document_agent = DocumentAgent(settings)
             # This will make a real call to OpenAI if the API key is valid.
             emails = document_agent.draft_outreach_emails(partner_data)
-            results = [
-                {"partner": p, "email": e} for p, e in zip(partner_data, emails)
-            ]
+            results = [{"partner": p, "email": e} for p, e in zip(partner_data, emails)]
             return render_template("research.html", results=results)
         else:
             return render_template(
@@ -140,28 +147,28 @@ def proposal():
     if request.method == "POST":
         action = request.form.get("action")
         settings = load_settings()
-        
+
         if not settings:
             flash("Error: Could not load application settings.", "error")
             return render_template("proposal.html")
-        
+
         proposal_agent = ProposalAgent(settings)
-        
+
         if action == "generate_stage1":
             try:
                 stage1_content = proposal_agent.generate_stage1_proposal()
-                return render_template("proposal.html", 
-                                     stage1_content=stage1_content,
-                                     generated=True)
+                return render_template(
+                    "proposal.html", stage1_content=stage1_content, generated=True
+                )
             except Exception as e:
                 flash(f"Error generating proposal: {str(e)}", "error")
-        
+
         elif action == "check_compliance":
             compliance = proposal_agent.check_compliance()
-            return render_template("proposal.html", 
-                                 compliance=compliance)
-    
+            return render_template("proposal.html", compliance=compliance)
+
     return render_template("proposal.html")
+
 
 @app.route("/api/timeline")
 def api_timeline():

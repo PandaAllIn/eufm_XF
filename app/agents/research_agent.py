@@ -1,7 +1,8 @@
 import json
 from typing import Dict, Any, List
-from app.agents.base_agent import BaseAgent, AgentStatus
+from app.agents.base_agent import BaseAgent
 from app.utils.ai_services import AIServices
+
 
 class ResearchAgent(BaseAgent):
     """An agent that conducts research by generating and executing a plan."""
@@ -23,7 +24,9 @@ class ResearchAgent(BaseAgent):
         ]
         """
         # For this refactoring, we will use the Perplexity Sonar for this task
-        response_str = self.ai_services.query_perplexity_sonar(prompt, model="sonar-reasoning")
+        response_str = self.ai_services.query_perplexity_sonar(
+            prompt, model="sonar-reasoning"
+        )
         try:
             plan = json.loads(response_str)
             return plan.get("steps", [])
@@ -52,25 +55,12 @@ class ResearchAgent(BaseAgent):
 
     def run(self, parameters: Dict[str, Any]) -> Any:
         """Runs the research agent. Expects 'query' in parameters."""
-        self.status = AgentStatus.RUNNING
         query = parameters.get("query")
         if not query:
-            self.error = "Missing 'query' parameter."
-            self.status = AgentStatus.FAILED
-            self.logger.error(self.error)
-            raise ValueError(self.error)
+            self.logger.error("Missing 'query' parameter.")
+            raise ValueError("Missing 'query' parameter.")
 
         self.logger.info(f"Starting research for query: {query}")
-        try:
-            plan = self.generate_research_plan(query)
-            results = self.execute_research_plan(plan)
-            
-            self.result = results
-            self.status = AgentStatus.COMPLETED
-            self.logger.info(f"Research completed for query: {query}")
-            return results
-        except Exception as e:
-            self.error = str(e)
-            self.status = AgentStatus.FAILED
-            self.logger.error(f"Research failed for query '{query}': {e}")
-            raise
+        plan = self.generate_research_plan(query)
+        results = self.execute_research_plan(plan)
+        return results
