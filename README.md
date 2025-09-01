@@ -1,4 +1,5 @@
 # EUFM Assistant
+![CI](https://github.com/PandaAllIn/eufm/actions/workflows/ci.yml/badge.svg)
 
 ## Project Overview
 The EUFM Assistant is a multi-agent system designed to streamline preparation of Horizon Europe proposals.
