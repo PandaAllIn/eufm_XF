@@ -1,9 +1,14 @@
 from flask import Flask, jsonify
+from flask_socketio import SocketIO
 from config.settings import get_settings
 from config.logging import setup_logging
 from app.utils.ai_services import AIServices
 from app.exceptions import EUFMAssistantException
 from app.api.collaboration import collaboration_bp
+
+
+
+socketio = SocketIO()
 
 
 def create_app():
@@ -13,6 +18,7 @@ def create_app():
     setup_logging()
 
     app = Flask(__name__)
+    socketio.init_app(app, cors_allowed_origins="*")
 
     # Load configuration
     settings = get_settings()
@@ -35,9 +41,14 @@ def create_app():
         response.status_code = 400  # Or a more specific code
         return response
 
-    # Register API blueprints
-    app.register_blueprint(collaboration_bp)
+    from app.api.collaboration import collaboration_bp
 
-    print("Flask App Created and Configured with Logging and Error Handling.")
+    app.register_blueprint(collaboration_bp, url_prefix="/api/collaboration")
+
+    app.socketio = socketio
+
+    print(
+        "Flask App Created and Configured with Logging, Error Handling, and SocketIO."
+    )
 
     return app
