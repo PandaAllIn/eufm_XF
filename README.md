@@ -44,27 +44,8 @@ See [docs/system_architecture.md](docs/system_architecture.md) for a comprehensi
   poetry run eufm propose
   ```
 
-## Telemetry
-
-JSONL telemetry logging is disabled by default. To enable it, set
-the `TELEMETRY_ENABLED` environment variable to `true` when running the
-application:
-
+## Testing
+Run the integration test suite to exercise the full agent workflow:
 ```bash
-TELEMETRY_ENABLED=true poetry run python launch_eufm.py
+poetry run pytest tests/integration -q
 ```
-
-When enabled, routing decisions and agent lifecycle events are written to
-daily rotated JSONL files in the `.logs/` directory at the project root.
-Each entry includes identifiers (run/task/agent) and a SHA-256 hash of
-any prompts instead of raw text to help protect sensitive data.
-
-## Perplexity Sonar Integration
-The research agent uses the [Perplexity API](https://docs.perplexity.ai/docs/getting-started) for plan generation. 
-Set your API key in the environment:
-```bash
-export PERPLEXITY_API_KEY="your-key"
-```
-
-When querying, you can select from models such as `sonar`, `sonar-reasoning` (default), or `sonar-deep-research`. The
-`PerplexityService` in `app/utils/services/perplexity_service.py` wraps these calls.
