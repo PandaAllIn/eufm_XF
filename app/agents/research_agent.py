@@ -14,6 +14,10 @@ class ResearchAgent(BaseAgent):
         super().__init__(agent_id, config)
         self.ai_services = ai_services
 
+    def lookup_call_id(self, call_id: str) -> str:
+        """Lookup a call ID in the Horizon Europe Programme Guide."""
+        return self.ai_services.query_programme_guide(call_id)
+
     def generate_research_plan(self, query: str) -> List[Dict[str, str]]:
         """Generates a research plan using an AI model."""
         prompt = f"""

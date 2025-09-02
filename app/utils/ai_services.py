@@ -1,11 +1,8 @@
 """Centralized interface for interacting with various AI services."""
 
-import logging
-from typing import Any
-from app.exceptions import AIServiceError
-from app.utils.services.perplexity_service import PerplexityService
+from openai import OpenAI
+from app.utils.horizon_guide import query_guide
 
-logger = logging.getLogger(__name__)
 
 class AIServices:
     def __init__(self, settings: Any):
@@ -43,6 +40,10 @@ class AIServices:
             raise AIServiceError(result["error"], service_name="Perplexity Sonar")
         return result["content"]
 
+
+    def query_programme_guide(self, topic: str) -> str:
+        """Search the Horizon Europe Programme Guide summary for a topic."""
+        return query_guide(topic)
 
 def get_ai_services(settings):
     """

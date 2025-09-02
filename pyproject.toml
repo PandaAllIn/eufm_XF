@@ -27,6 +27,7 @@ python-json-logger = "*"
 celery = "*"
 redis = "*"
 psycopg2-binary = "*"
+pypdf = "*"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
@@ -38,6 +39,7 @@ isort = "*"
 flake8 = "*"
 mypy = "*"
 pre-commit = "*"
+fpdf = "*"
 ruff = "*"
 
 [tool.poetry.scripts]
