@@ -1,10 +1,25 @@
 import json
-import logging
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
-from app.agents.base_agent import BaseAgent, AgentStatus
+from app.agents.base_agent import AgentStatus, BaseAgent
 from app.utils.ai_services import AIServices
-from config.logging import log_event
+from app.exceptions import AIServiceError, AgentExecutionError, ValidationError
+
+
+def perform_google_search(query: str) -> Dict[str, Any]:
+    """Perform a Google Custom Search request.
+
+    TODO: Implement actual Google Custom Search API integration.
+    """
+    return {"search": query, "results": []}
+
+
+def fetch_page_text(url: str) -> Dict[str, Any]:
+    """Fetch the text content of a web page.
+
+    TODO: Implement real page fetching and parsing.
+    """
+    return {"url": url, "content": ""}
 
 
 class ResearchAgent(BaseAgent):
@@ -30,12 +45,15 @@ class ResearchAgent(BaseAgent):
             {{"tool": "google_search", "query": "site:cordis.europa.eu xylella fastidiosa research projects spain"}}
         ]
         """
-        # For this refactoring, we will use the Perplexity Sonar for this task
-        response_str = self.ai_services.query_perplexity_sonar(
-            prompt, model="sonar-reasoning"
-        )
         try:
-            plan = json.loads(response["content"])
+            response_text = self.ai_services.query_perplexity_sonar(
+                prompt, model="sonar-reasoning"
+            )
+        except AIServiceError as exc:
+            self.logger.error(f"Perplexity error: {exc}")
+            return []
+        try:
+            plan = json.loads(response_text)
         except json.JSONDecodeError:
             log_event(
                 self.logger,
@@ -105,6 +123,12 @@ class ResearchAgent(BaseAgent):
         )
         try:
             plan = self.generate_research_plan(query)
+            if not plan:
+                raise AgentExecutionError(
+                    f"Research failed for query '{query}'",
+                    agent_type="research",
+                    agent_id=self.agent_id,
+                )
             results = self.execute_research_plan(plan)
 
             self.result = results

@@ -1,4 +1,5 @@
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional, Type
+
 from openai import OpenAI
 
 
@@ -6,9 +7,16 @@ class PerplexityService:
     """Service wrapper for interacting with the Perplexity Sonar API."""
 
     def __init__(
-        self, api_key: str, base_url: str = "https://api.perplexity.ai"
+        self,
+        api_key: Optional[str],
+        base_url: str = "https://api.perplexity.ai",
+        client_cls: Type[OpenAI] = OpenAI,
     ) -> None:
-        self.client = OpenAI(api_key=api_key, base_url=base_url)
+        self.client: Optional[OpenAI]
+        if api_key:
+            self.client = client_cls(api_key=api_key, base_url=base_url)
+        else:  # pragma: no cover - simple guard
+            self.client = None
 
     def query(
         self,
@@ -16,11 +24,10 @@ class PerplexityService:
         model: str = "sonar-reasoning",
         max_tokens: Optional[int] = None,
     ) -> Dict[str, Optional[str]]:
-        """Query the Perplexity Sonar API.
+        """Query the Perplexity Sonar API."""
+        if not self.client:
+            return {"content": None, "error": "API key not configured"}
 
-        Returns a dict with either a ``content`` field on success or an ``error`` field
-        if the request failed.
-        """
         messages = [
             {
                 "role": "system",
