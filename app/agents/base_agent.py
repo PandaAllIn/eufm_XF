@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
-from enum import Enum
+from typing import Dict, Any
 import logging
-from typing import Any, Dict, Optional
+from enum import Enum
+from uuid import uuid4
+from datetime import datetime
 
-from app.utils.telemetry import telemetry_logger
+from app.utils.logging import log_event
 
 
 class AgentStatus(Enum):
@@ -25,27 +27,15 @@ class BaseAgent(ABC):
         self.result: Any = None
         self.error: str | None = None
         self.logger = logging.getLogger(self.__class__.__name__)
+        self.run_id = str(uuid4())
+        self.started_at: datetime | None = None
+        self.ended_at: datetime | None = None
+        self.duration_ms: int | None = None
 
     @abstractmethod
     def run(self, parameters: Dict[str, Any]) -> Any:
         """The main entry point for the agent's execution logic."""
         pass
-
-    def execute(self, parameters: Dict[str, Any]) -> Any:
-        """Execute the agent with lifecycle hooks and status management."""
-        self.status = AgentStatus.RUNNING
-        self.on_start()
-        try:
-            result = self.run(parameters)
-            self.result = result
-            self.status = AgentStatus.COMPLETED
-            self.on_success()
-            return result
-        except Exception as e:
-            self.error = str(e)
-            self.status = AgentStatus.FAILED
-            self.on_failure(e)
-            raise
 
     def on_start(self):
         """Lifecycle hook called when the agent starts running."""
@@ -59,45 +49,41 @@ class BaseAgent(ABC):
         """Lifecycle hook called when the agent fails."""
         pass
 
-    def execute(
-        self,
-        parameters: Dict[str, Any],
-        run_id: Optional[str] = None,
-        task_id: Optional[str] = None,
-    ) -> Any:
-        """Execute the agent with telemetry and status management."""
+    def execute(self, parameters: Dict[str, Any]) -> Any:
+        """Wraps the run method with lifecycle hooks and logging."""
+        task_id = str(uuid4())
         self.status = AgentStatus.RUNNING
+        self.started_at = datetime.utcnow()
+        log_event(self.run_id, task_id, self.agent_id, self.status.value, "start")
         self.on_start()
-        telemetry_logger.log(
-            run_id=run_id,
-            task_id=task_id,
-            agent_id=self.agent_id,
-            event_type="start",
-            status=self.status.value,
-        )
+
         try:
-            self.result = self.run(parameters)
+            params_with_ids = {**parameters, "run_id": self.run_id, "task_id": task_id}
+            result = self.run(params_with_ids)
+            self.result = result
             self.status = AgentStatus.COMPLETED
-            self.on_success()
-            telemetry_logger.log(
-                run_id=run_id,
-                task_id=task_id,
-                agent_id=self.agent_id,
-                event_type="success",
-                status=self.status.value,
+            self.ended_at = datetime.utcnow()
+            self.duration_ms = int(
+                (self.ended_at - self.started_at).total_seconds() * 1000
             )
-            return self.result
-        except Exception as exc:  # pragma: no cover - simple wrapper
+            self.on_success()
+            log_event(self.run_id, task_id, self.agent_id, self.status.value, "success")
+            return result
+        except Exception as e:  # pragma: no cover - re-raise after logging
+            self.error = str(e)
             self.status = AgentStatus.FAILED
-            self.error = str(exc)
-            self.on_failure(exc)
-            telemetry_logger.log(
-                run_id=run_id,
-                task_id=task_id,
-                agent_id=self.agent_id,
-                event_type="failure",
-                status=self.status.value,
-                error=self.error,
+            self.ended_at = datetime.utcnow()
+            self.duration_ms = int(
+                (self.ended_at - self.started_at).total_seconds() * 1000
+            )
+            self.on_failure(e)
+            log_event(
+                self.run_id,
+                task_id,
+                self.agent_id,
+                self.status.value,
+                "failure",
+                self.error,
             )
             raise
 
@@ -109,14 +95,3 @@ class BaseAgent(ABC):
             "result": self.result,
             "error": self.error,
         }
-
-    def execute(self, parameters: Dict[str, Any]) -> Any:
-        """Public method to execute the agent with lifecycle hooks."""
-        try:
-            self.on_start()
-            result = self.run(parameters)
-            self.on_success()
-            return result
-        except Exception as e:
-            self.on_failure(e)
-            raise
