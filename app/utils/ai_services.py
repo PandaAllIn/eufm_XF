@@ -5,43 +5,70 @@ from typing import Any
 
 from openai import OpenAI
 
-from app.exceptions import AIServiceError
-from app.utils.services.perplexity_service import PerplexityService
-
-
 
 class AIServices:
-    def __init__(self, settings: Any):
+    def __init__(self, settings):
         self.settings = settings
-        self.perplexity_service = PerplexityService(
-            api_key=self.settings.get("perplexity_api_key"),
-            client_cls=OpenAI,
-        )
 
-    def query_jules_ai(self, prompt: str) -> str:
-        """Sends a query to Jules AI and returns the response."""
+    def query(self, model: str, prompt: str) -> str:
+        """Generic interface for querying supported AI models."""
+        if model.startswith("sonar"):
+            return self.query_perplexity_sonar(prompt, model=model)
+        raise ValueError(f"Unsupported model: {model}")
+
+    def query_jules_ai(self, prompt):
+        """
+        Sends a query to Jules AI and returns the response.
+        (Placeholder implementation)
+        """
         print(f"--- Querying Jules AI with prompt: {prompt[:50]}... ---")
         return "Response from Jules AI."
 
-    def query_openai_codex(self, prompt: str, language: str = "python") -> str:
-        """Sends a query to OpenAI Codex and returns the response."""
+    def query_openai_codex(self, prompt, language="python"):
+        """
+        Sends a query to OpenAI Codex and returns the response.
+        (Placeholder implementation)
+        """
         print(
             f"--- Querying OpenAI Codex for {language} with prompt: {prompt[:50]}... ---"
         )
+        # In a real implementation, this would make an API call to OpenAI Codex.
         return "Generated code from OpenAI Codex."
 
-    def query_perplexity_sonar(
-        self, prompt: str, model: str = "sonar-reasoning", max_tokens: Any = None
-    ) -> str:
-        """Sends a query to the Perplexity Sonar API and returns the content."""
-        result = self.perplexity_service.query(
-            prompt, model=model, max_tokens=max_tokens
+    def query_perplexity_sonar(self, prompt, model="sonar-deep-research"):
+        """
+        Sends a query to the Perplexity Sonar API and returns the response.
+        """
+        print(
+            f"--- Querying Perplexity Sonar ({model}) with prompt: {prompt[:50]}... ---"
         )
-        if result["error"]:
-            raise AIServiceError(result["error"], service_name="Perplexity Sonar")
-        return result["content"]  # type: ignore[return-value]
+
+        client = OpenAI(
+            api_key=self.settings.get("perplexity_api_key"),
+            base_url="https://api.perplexity.ai",
+        )
+
+        messages = [
+            {
+                "role": "system",
+                "content": "You are an expert research assistant for a Horizon Europe project.",
+            },
+            {"role": "user", "content": prompt},
+        ]
+
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=messages,
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            print(f"--- Error querying Perplexity Sonar: {str(e)} ---")
+            return f"Error: Could not get a response from Perplexity Sonar. Details: {str(e)}"
 
 
-def get_ai_services(settings: Any) -> AIServices:
-    """Factory function to get an instance of AIServices."""
+def get_ai_services(settings):
+    """
+    Factory function to get an instance of AIServices.
+    """
     return AIServices(settings)
