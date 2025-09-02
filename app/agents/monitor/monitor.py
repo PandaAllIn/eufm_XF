@@ -1,7 +1,9 @@
 import yaml
 from datetime import datetime, timezone
+from pathlib import Path
 
-WBS_FILE_PATH = "src/eufm_assistant/docs/project_wbs.yaml"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+WBS_FILE_PATH = PROJECT_ROOT / "docs" / "project_wbs.yaml"
 
 
 def get_wbs_data():

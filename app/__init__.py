@@ -5,10 +5,12 @@ from pathlib import Path
 from config.settings import get_settings
 from config.logging import setup_logging
 from app.utils.ai_services import AIServices
+from app.services.agent_factory import AgentFactory
 from app.exceptions import EUFMAssistantException
 from app.services.chat_service import ChatService
 
 socketio = SocketIO()
+
 
 
 def create_app():
@@ -23,18 +25,12 @@ def create_app():
     settings = get_settings()
     app.config["APP_SETTINGS"] = settings
 
-    # Initialize AI services
+    # Initialize AI services and agent factory
     ai_services = AIServices(settings.ai.dict())
+    agent_factory = AgentFactory(ai_services, settings.ai.dict())
     app.ai_services = ai_services
-
-    # Initialize chat service
-    chat_service = ChatService(Path(".state/chat.jsonl"))
-    app.chat_service = chat_service
-
-    # Register API blueprints
-    from app.api import init_app as init_api
-
-    init_api(app)
+    app.agent_factory = agent_factory
+    app.config["AGENT_FACTORY"] = agent_factory
 
     # Register a simple root route for health checks
     @app.route("/")
