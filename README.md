@@ -11,6 +11,7 @@ It automates project documentation, partner research, and monitoring so teams ca
 - **Research agent** for partner and data discovery.
 - **Monitoring tools** to track deadlines and project health.
 - **Extensible architecture** built with Python and Flask.
+- **Centralized structured logging** with event categories and optional error codes for improved observability.
 
 ## System Architecture
 See [docs/system_architecture.md](docs/system_architecture.md) for a comprehensive overview of the current architecture and developer guidelines.
