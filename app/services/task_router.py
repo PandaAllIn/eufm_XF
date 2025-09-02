@@ -4,18 +4,24 @@ This module provides a simple keyword-based router that recommends
 which agent in the task force should handle a user's request.
 """
 
+from typing import Iterable
 import hashlib
-from typing import Optional
+import json
+from uuid import uuid4
+from datetime import datetime
 
-from app.utils.telemetry import telemetry_logger
+from config.logging import get_logger
 
 
-# Mapping of agent names to keywords that should trigger them.
+logger = get_logger(__name__)
+
+
+# Mapping of agent keys to keywords that should trigger them.
 _ROUTING_TABLE = {
-    "Perplexity Sonar": {"research", "find", "analyze", "summarize"},
-    "OpenAI Codex": {"code", "implement", "refactor", "script"},
-    "Claude Code": {"strategy", "review", "plan", "supervise"},
-    "Gemini CLI": {"system", "operations", "execute", "run"},
+    "research": {"research", "find", "analyze", "summarize"},
+    "document": {"document", "write", "draft", "edit"},
+    "proposal": {"proposal", "strategy", "plan", "review"},
+    "coordinator": {"coordinate", "system", "execute", "run"},
 }
 
 
@@ -23,25 +29,38 @@ def route_task(prompt: str, run_id: Optional[str] = None, task_id: Optional[str]
     """Suggest the most suitable agent for the given prompt and log the decision."""
 
     prompt_lower = prompt.lower()
-    chosen_agent = "OpenAI Codex"
-    reason = "no keyword matched"
-    for agent, keywords in _ROUTING_TABLE.items():
-        for keyword in keywords:
-            if keyword in prompt_lower:
-                chosen_agent = agent
-                reason = f"keyword '{keyword}'"
-                break
-        if chosen_agent == agent and reason != "no keyword matched":
-            break
+    return any(keyword in prompt_lower for keyword in keywords)
 
-    prompt_hash = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
-    telemetry_logger.log(
-        run_id=run_id,
-        task_id=task_id,
-        agent_id=None,
-        event_type="router_decision",
-        prompt_hash=prompt_hash,
-        chosen_agent=chosen_agent,
-        reason=reason,
-    )
-    return chosen_agent
+
+def route_task(prompt: str) -> tuple[str, str]:
+    """Suggest the most suitable agent for the given prompt.
+
+    Args:
+        prompt: The user's task description.
+
+    Returns:
+        Tuple of the recommended agent key and the routing reason.
+    """
+
+    prompt_lower = prompt.lower()
+    for agent, keywords in _ROUTING_TABLE.items():
+        matched = [kw for kw in keywords if kw in prompt_lower]
+        if matched:
+            return agent, f"Matched keywords: {', '.join(matched)}"
+
+    # Fallback agent if nothing matches.
+    return "document", "No keywords matched; using default"
+
+
+def log_routing_decision(prompt: str, chosen_agent: str, reason: str) -> dict:
+    """Log a routing decision and return the record."""
+
+    record = {
+        "run_id": str(uuid4()),
+        "prompt_hash": hashlib.sha1(prompt.encode("utf-8")).hexdigest(),
+        "chosen_agent": chosen_agent,
+        "reason": reason,
+        "ts": datetime.utcnow().isoformat(),
+    }
+    logger.info(json.dumps(record))
+    return record

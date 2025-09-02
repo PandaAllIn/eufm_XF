@@ -26,6 +26,10 @@ python -m app.pipelines.stage2_research_pipeline "<your topic>" --output stage2
 
 The generated `research_plan.json` file will be stored in the specified output directory.
 
+## Router POC integrated
+- Added automatic agent routing via SmartTaskRouter.
+- Introduced CLI usage with `python -m scripts.route "prompt"` to inspect routing decisions.
+
 ## Open Questions & Blockers
 - The `poetry install` command is still failing in the CI environment. This needs to be addressed.
 
