@@ -1,8 +1,11 @@
 from flask import Flask, jsonify
+from flask_socketio import SocketIO
 from config.settings import get_settings
 from config.logging import setup_logging
 from app.utils.ai_services import AIServices
 from app.exceptions import EUFMAssistantException
+
+socketio = None
 
 def create_app():
     """Application factory for creating Flask app instances."""
@@ -11,6 +14,9 @@ def create_app():
     setup_logging()
     
     app = Flask(__name__)
+
+    global socketio
+    socketio = SocketIO(app, cors_allowed_origins="*")
     
     # Load configuration
     settings = get_settings()
@@ -24,6 +30,12 @@ def create_app():
     @app.route("/")
     def index():
         return "EUFM Assistant is running."
+
+    # Register collaboration API blueprint and Socket.IO handlers
+    from app.api.collaboration import collaboration_bp, register_socketio
+
+    app.register_blueprint(collaboration_bp)
+    register_socketio(socketio)
 
     # Register global error handler
     @app.errorhandler(EUFMAssistantException)
