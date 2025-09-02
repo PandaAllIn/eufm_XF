@@ -44,8 +44,15 @@ See [docs/system_architecture.md](docs/system_architecture.md) for a comprehensi
   poetry run eufm propose
   ```
 
-## Testing
-Run the integration test suite to exercise the full agent workflow:
-```bash
-poetry run pytest tests/integration -q
-```
+## Configuration
+
+Agents interact with external providers via the unified `ai_services` module.
+API keys are read from environment variables using Pydantic settings. Set the
+following variables before running agents:
+
+- `OPENAI_API_KEY`
+- `GOOGLE_API_KEY`
+- `PERPLEXITY_API_KEY`
+
+The `ai_services` helpers are asynchronous; synchronous agents call them using
+`asyncio.run`.

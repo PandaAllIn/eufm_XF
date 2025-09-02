@@ -1,33 +1,23 @@
+import asyncio
 import json
-from typing import Any, Dict, List
+import warnings
+from typing import Dict, Any, List
 
-from app.agents.base_agent import AgentStatus, BaseAgent
-from app.utils.ai_services import AIServices
-from app.exceptions import AIServiceError, AgentExecutionError, ValidationError
-
-
-def perform_google_search(query: str) -> Dict[str, Any]:
-    """Perform a Google Custom Search request.
-
-    TODO: Implement actual Google Custom Search API integration.
-    """
-    return {"search": query, "results": []}
-
-
-def fetch_page_text(url: str) -> Dict[str, Any]:
-    """Fetch the text content of a web page.
-
-    TODO: Implement real page fetching and parsing.
-    """
-    return {"url": url, "content": ""}
+from app.agents.base_agent import BaseAgent, AgentStatus
+from app.utils.ai_services import AIServices, get_ai_services
 
 
 class ResearchAgent(BaseAgent):
     """An agent that conducts research by generating and executing a plan."""
 
-    def __init__(self, agent_id: str, config: Dict[str, Any], ai_services: AIServices):
+    def __init__(
+        self,
+        agent_id: str,
+        config: Dict[str, Any],
+        ai_services: AIServices | None = None,
+    ):
         super().__init__(agent_id, config)
-        self.ai_services = ai_services
+        self.ai_services = ai_services or get_ai_services()
 
     def lookup_call_id(self, call_id: str) -> str:
         """Lookup a call ID in the Horizon Europe Programme Guide."""
@@ -45,6 +35,9 @@ class ResearchAgent(BaseAgent):
             {{"tool": "google_search", "query": "site:cordis.europa.eu xylella fastidiosa research projects spain"}}
         ]
         """
+        response_str = asyncio.run(
+            self.ai_services.query_perplexity_sonar(prompt, model="sonar-reasoning")
+        )
         try:
             response_text = self.ai_services.query_perplexity_sonar(
                 prompt, model="sonar-reasoning"
@@ -68,6 +61,16 @@ class ResearchAgent(BaseAgent):
             self.logger.error("Research plan response missing 'steps' field.")
             return []
         return steps
+
+    def generate_research_plan_direct(
+        self, query: str
+    ) -> List[Dict[str, str]]:  # pragma: no cover - deprecated
+        warnings.warn(
+            "generate_research_plan_direct is deprecated; use generate_research_plan",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.generate_research_plan(query)
 
     def execute_research_plan(self, plan: List[Dict[str, str]]) -> List[Dict[str, Any]]:
         """Executes the research plan. (Currently mocked)"""

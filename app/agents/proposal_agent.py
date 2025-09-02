@@ -1,21 +1,26 @@
-import logging
+import asyncio
+import warnings
 from typing import Dict, Any
-import google.generativeai as genai
+
 from app.agents.base_agent import BaseAgent, AgentStatus
-from app.utils.ai_services import AIServices
+from app.utils.ai_services import AIServices, get_ai_services
 from config.settings import get_settings
 from config.logging import log_event
+
 
 
 class ProposalAgent(BaseAgent):
     """Agent responsible for generating Horizon Europe proposals."""
 
-    def __init__(self, agent_id: str, config: Dict[str, Any], ai_services: AIServices):
+    def __init__(
+        self,
+        agent_id: str,
+        config: Dict[str, Any],
+        ai_services: AIServices | None = None,
+    ):
         super().__init__(agent_id, config)
         self.settings = get_settings()
-        self.ai_services = ai_services
-        genai.configure(api_key=self.settings.ai.google_api_key)
-        self.gemini_client = genai.GenerativeModel(self.settings.ai.default_model)
+        self.ai_services = ai_services or get_ai_services(self.settings)
 
     def get_approved_proposal_content(self) -> str:
         """Loads the content of the approved proposal."""
@@ -36,6 +41,19 @@ class ProposalAgent(BaseAgent):
                 error_code="PROPOSAL_NOT_FOUND",
             )
             return "Error: Approved proposal file not found."
+
+    async def generate_proposal_outline(self, prompt: str) -> str:
+        return await self.ai_services.generate_gemini_content(prompt)
+
+    def generate_proposal_outline_direct(
+        self, prompt: str
+    ) -> str:  # pragma: no cover - deprecated
+        warnings.warn(
+            "generate_proposal_outline_direct is deprecated; use generate_proposal_outline",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return asyncio.run(self.generate_proposal_outline(prompt))
 
     def run(self, parameters: Dict[str, Any]) -> Any:
         """
@@ -69,13 +87,5 @@ class ProposalAgent(BaseAgent):
         except Exception as e:
             self.error = str(e)
             self.status = AgentStatus.FAILED
-            log_event(
-                self.logger,
-                logging.ERROR,
-                "AGENT_ERROR",
-                f"Failed to retrieve proposal content: {e}",
-                run_id,
-                task_id,
-                error_code="PROPOSAL_RETRIEVE_FAIL",
-            )
+            self.logger.error(f"Failed to retrieve proposal content: {e}")
             raise

@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch
+
 from app.agents.coordinator_agent import CoordinatorAgent
 
 
@@ -15,7 +16,8 @@ class TestCoordinatorAgent(unittest.TestCase):
         }
         mock_load_wbs.return_value = mock_wbs_data
 
-        agent = CoordinatorAgent(agent_id="test", config={})
+        agent = CoordinatorAgent(agent_id="coord", config={})
+        agent.wbs = mock_wbs_data
 
         expected_action = "Next Action: Define tasks for Work Package 'WP2'."
         self.assertEqual(agent.determine_next_task(), expected_action)
@@ -36,7 +38,7 @@ class TestCoordinatorAgent(unittest.TestCase):
         )
         mock_load_proposal.return_value = mock_proposal_content
 
-        agent = CoordinatorAgent(agent_id="test", config={})
+        agent = CoordinatorAgent(agent_id="coord", config={})
 
         expected_checklist = (
             "--- Proposal Section Checklist ---\n"
