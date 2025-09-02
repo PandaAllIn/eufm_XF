@@ -1,9 +1,9 @@
 import json
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
-from app.agents.base_agent import BaseAgent, AgentStatus
+from app.agents.base_agent import AgentStatus, BaseAgent
 from app.utils.ai_services import AIServices
-from app.exceptions import ValidationError, AgentExecutionError
+from app.exceptions import AIServiceError, AgentExecutionError, ValidationError
 
 
 def perform_google_search(query: str) -> Dict[str, Any]:
@@ -41,14 +41,15 @@ class ResearchAgent(BaseAgent):
             {{"tool": "google_search", "query": "site:cordis.europa.eu xylella fastidiosa research projects spain"}}
         ]
         """
-        response = self.ai_services.perplexity_service.query(
-            prompt, model="sonar-reasoning"
-        )
-        if response["error"]:
-            self.logger.error(f"Perplexity error: {response['error']}")
+        try:
+            response_text = self.ai_services.query_perplexity_sonar(
+                prompt, model="sonar-reasoning"
+            )
+        except AIServiceError as exc:
+            self.logger.error(f"Perplexity error: {exc}")
             return []
         try:
-            plan = json.loads(response["content"])
+            plan = json.loads(response_text)
         except json.JSONDecodeError:
             self.logger.error("Failed to decode JSON from research plan response.")
             return []
@@ -86,6 +87,12 @@ class ResearchAgent(BaseAgent):
         self.logger.info(f"Starting research for query: {query}")
         try:
             plan = self.generate_research_plan(query)
+            if not plan:
+                raise AgentExecutionError(
+                    f"Research failed for query '{query}'",
+                    agent_type="research",
+                    agent_id=self.agent_id,
+                )
             results = self.execute_research_plan(plan)
 
             self.result = results
