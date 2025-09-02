@@ -1,12 +1,22 @@
-from flask import Blueprint
-from flask_socketio import emit
+from flask import Blueprint, jsonify, request
 
-from app import socketio
+from app.services.status_buffer import get_status_updates
 
-collaboration_bp = Blueprint("collaboration", __name__)
+bp = Blueprint("collaboration", __name__, url_prefix="/api/collaboration")
 
 
-@socketio.on("message")
-def handle_message(data):
-    """Broadcast received chat messages to all clients."""
-    emit("message", data, broadcast=True)
+@bp.get("/agent_status")
+def agent_status() -> tuple:
+    """Return the most recent agent status updates.
+
+    Query Parameters
+    ----------------
+    limit: int, optional
+        Number of records to return. Defaults to 10.
+    """
+    try:
+        limit = int(request.args.get("limit", 10))
+    except ValueError:
+        limit = 10
+    updates = get_status_updates(limit)
+    return jsonify({"updates": updates}), 200
