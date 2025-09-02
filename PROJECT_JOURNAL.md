@@ -19,7 +19,7 @@
 - `2025-09-01 00:12:08`: Implemented the failed 'Milestone Archive' task.
 - `2025-09-01 00:12:08`: Merged all successful branches from the overnight initiative into the main branch.
 - `YYYY-MM-DD HH:MM:SS`: Initializing the project journal.
-- `2025-09-01`: Refactored agents to use unified `ai_services` with async support and env-based API keys.
+- `YYYY-MM-DD HH:MM:SS`: Unified CLI entrypoints and deprecated legacy launcher.
 
 ## Open Questions & Blockers
 - The `poetry install` command is still failing in the CI environment. This needs to be addressed.

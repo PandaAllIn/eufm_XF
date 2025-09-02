@@ -13,8 +13,19 @@ It automates project documentation, partner research, and monitoring so teams ca
 - **Extensible architecture** built with Python and Flask.
 - **Centralized structured logging** with event categories and optional error codes for improved observability.
 
-## System Architecture
-See [docs/system_architecture.md](docs/system_architecture.md) for a comprehensive overview of the current architecture and developer guidelines.
+## Architecture Diagram
+```
+eufm/
+├── app/               # Core application package
+│   ├── agents/        # Research, proposal, and monitor agents
+│   ├── api/           # REST API endpoints
+│   ├── models/        # Database models
+│   └── services/      # Business logic
+├── config/            # Configuration files
+├── docs/              # Project documentation
+├── scripts/           # Utility scripts
+└── launch_eufm.py     # Legacy entry point (delegates to CLI)
+```
 
 ## Getting Started
 1. **Install Poetry** (if not already installed):
@@ -25,22 +36,23 @@ See [docs/system_architecture.md](docs/system_architecture.md) for a comprehensi
    ```bash
    poetry install
    ```
-3. **Run the unified CLI**:
+3. **Explore the unified CLI**:
    ```bash
    poetry run eufm --help
    ```
 
 ## Usage Examples
-- **Route a task to an agent**
+- **Route a task to the best agent**
   ```bash
-  poetry run eufm route "Find partners in Italy"
+  poetry run eufm route "Research funding opportunities"
   ```
-- **Run the research agent**
+- **Run a specific agent**
+  ```bash
+  poetry run eufm run-agent research --param query="Find partners in Italy"
+  ```
+- **Use specialized shortcuts**
   ```bash
   poetry run eufm research "Find partners in Italy"
-  ```
-- **Generate proposal content**
-  ```bash
   poetry run eufm propose
   ```
 
