@@ -10,6 +10,7 @@ packages = [{include = "app"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 flask = "*"
+flask-socketio = "*"
 openai = "*"
 google-generativeai = "*"
 pyyaml = "*"
@@ -26,6 +27,7 @@ python-json-logger = "*"
 celery = "*"
 redis = "*"
 psycopg2-binary = "*"
+pypdf = "*"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
@@ -37,6 +39,7 @@ isort = "*"
 flake8 = "*"
 mypy = "*"
 pre-commit = "*"
+fpdf = "*"
 ruff = "*"
 
 [tool.poetry.scripts]

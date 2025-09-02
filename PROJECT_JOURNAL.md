@@ -11,11 +11,15 @@
 - Ensure all new code meets quality standards via automated checks.
 
 ## Key Decisions Log
+- `2025-09-01 00:35:49`: CoordinatorAgent initialized.
+- `2025-09-01 00:35:49`: CoordinatorAgent initialized.
+- `2025-09-01 00:35:36`: CoordinatorAgent initialized.
+- `2025-09-01 00:35:36`: CoordinatorAgent initialized.
 - `2025-09-01 00:12:08`: Integrated the new journal system into the CoordinatorAgent.
 - `2025-09-01 00:12:08`: Implemented the failed 'Milestone Archive' task.
 - `2025-09-01 00:12:08`: Merged all successful branches from the overnight initiative into the main branch.
-- `2025-09-01 00:12:08`: CLI overhaul implementing unified command-line interface.
-- `2025-09-01 00:12:08`: Added minimal CI workflow for linting and tests.
+- `YYYY-MM-DD HH:MM:SS`: Initializing the project journal.
+- `YYYY-MM-DD HH:MM:SS`: Unified CLI entrypoints and deprecated legacy launcher.
 
 ## Open Questions & Blockers
 - The `poetry install` command is still failing in the CI environment. This needs to be addressed.

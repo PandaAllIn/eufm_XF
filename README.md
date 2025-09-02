@@ -11,9 +11,21 @@ It automates project documentation, partner research, and monitoring so teams ca
 - **Research agent** for partner and data discovery.
 - **Monitoring tools** to track deadlines and project health.
 - **Extensible architecture** built with Python and Flask.
+- **Centralized structured logging** with event categories and optional error codes for improved observability.
 
-## System Architecture
-See [docs/system_architecture.md](docs/system_architecture.md) for a comprehensive overview of the current architecture and developer guidelines.
+## Architecture Diagram
+```
+eufm/
+├── app/               # Core application package
+│   ├── agents/        # Research, proposal, and monitor agents
+│   ├── api/           # REST API endpoints
+│   ├── models/        # Database models
+│   └── services/      # Business logic
+├── config/            # Configuration files
+├── docs/              # Project documentation
+├── scripts/           # Utility scripts
+└── launch_eufm.py     # Legacy entry point (delegates to CLI)
+```
 
 ## Getting Started
 1. **Install Poetry** (if not already installed):
@@ -24,46 +36,35 @@ See [docs/system_architecture.md](docs/system_architecture.md) for a comprehensi
    ```bash
    poetry install
    ```
-3. **Run the unified CLI**:
+3. **Explore the unified CLI**:
    ```bash
    poetry run eufm --help
    ```
 
 ## Usage Examples
-- **Route a task to an agent**
+- **Route a task to the best agent**
   ```bash
-  poetry run eufm route "Find partners in Italy"
+  poetry run eufm route "Research funding opportunities"
   ```
-- **Run the research agent**
+- **Run a specific agent**
+  ```bash
+  poetry run eufm run-agent research --param query="Find partners in Italy"
+  ```
+- **Use specialized shortcuts**
   ```bash
   poetry run eufm research "Find partners in Italy"
-  ```
-- **Generate proposal content**
-  ```bash
   poetry run eufm propose
   ```
 
-## Telemetry
+## Configuration
 
-JSONL telemetry logging is disabled by default. To enable it, set
-the `TELEMETRY_ENABLED` environment variable to `true` when running the
-application:
+Agents interact with external providers via the unified `ai_services` module.
+API keys are read from environment variables using Pydantic settings. Set the
+following variables before running agents:
 
-```bash
-TELEMETRY_ENABLED=true poetry run python launch_eufm.py
-```
+- `OPENAI_API_KEY`
+- `GOOGLE_API_KEY`
+- `PERPLEXITY_API_KEY`
 
-When enabled, routing decisions and agent lifecycle events are written to
-daily rotated JSONL files in the `.logs/` directory at the project root.
-Each entry includes identifiers (run/task/agent) and a SHA-256 hash of
-any prompts instead of raw text to help protect sensitive data.
-
-## Perplexity Sonar Integration
-The research agent uses the [Perplexity API](https://docs.perplexity.ai/docs/getting-started) for plan generation. 
-Set your API key in the environment:
-```bash
-export PERPLEXITY_API_KEY="your-key"
-```
-
-When querying, you can select from models such as `sonar`, `sonar-reasoning` (default), or `sonar-deep-research`. The
-`PerplexityService` in `app/utils/services/perplexity_service.py` wraps these calls.
+The `ai_services` helpers are asynchronous; synchronous agents call them using
+`asyncio.run`.

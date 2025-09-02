@@ -5,9 +5,8 @@ from app.agents.coordinator_agent import CoordinatorAgent
 
 
 class TestCoordinatorAgent(unittest.TestCase):
-    @patch("app.agents.coordinator_agent.CoordinatorAgent._load_proposal", return_value="")
     @patch("app.agents.coordinator_agent.CoordinatorAgent._load_wbs")
-    def test_determine_next_task_wbs_logic(self, mock_load_wbs, _mock_load_proposal):
+    def test_determine_next_task_wbs_logic(self, mock_load_wbs):
         """
         Tests that the agent correctly identifies the need to define tasks
         when a WP has an empty task list in the new WBS format.
@@ -17,15 +16,15 @@ class TestCoordinatorAgent(unittest.TestCase):
         }
         mock_load_wbs.return_value = mock_wbs_data
 
-        agent = CoordinatorAgent("c1", {})
+        agent = CoordinatorAgent(agent_id="coord", config={})
         agent.wbs = mock_wbs_data
 
         expected_action = "Next Action: Define tasks for Work Package 'WP2'."
         self.assertEqual(agent.determine_next_task(), expected_action)
 
     @patch("app.agents.coordinator_agent.CoordinatorAgent._load_proposal")
-    @patch("app.agents.coordinator_agent.CoordinatorAgent._load_wbs", return_value={})
-    def test_create_proposal_checklist(self, _mock_load_wbs, mock_load_proposal):
+    @patch("app.agents.coordinator_agent.CoordinatorAgent._load_wbs")
+    def test_create_proposal_checklist(self, mock_load_wbs, mock_load_proposal):
         """
         Tests that the agent can correctly parse a markdown proposal
         and create a checklist.
@@ -39,7 +38,7 @@ class TestCoordinatorAgent(unittest.TestCase):
         )
         mock_load_proposal.return_value = mock_proposal_content
 
-        agent = CoordinatorAgent("c1", {})
+        agent = CoordinatorAgent(agent_id="coord", config={})
 
         expected_checklist = (
             "--- Proposal Section Checklist ---\n"

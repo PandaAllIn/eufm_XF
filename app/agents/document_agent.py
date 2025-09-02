@@ -1,25 +1,49 @@
-from openai import OpenAI
+import asyncio
+import warnings
 from typing import Dict, Any, List
+
 from app.agents.base_agent import BaseAgent, AgentStatus
 from config.settings import get_settings
-from app.exceptions import ValidationError, AgentExecutionError
+from app.utils.ai_services import AIServices, get_ai_services
+
 
 class DocumentAgent(BaseAgent):
     """An agent for drafting documents, such as outreach emails."""
 
-    def __init__(self, agent_id: str, config: Dict[str, Any]):
+    def __init__(
+        self,
+        agent_id: str,
+        config: Dict[str, Any],
+        ai_services: AIServices | None = None,
+    ):
         super().__init__(agent_id, config)
         self.settings = get_settings()
-        self.client = OpenAI(api_key=self.settings.ai.openai_api_key)
-        self.knowledge_base_path = self.settings.app.PROJECT_ROOT / "eufm" / "Horizon_Xilella.md"
+        self.ai_services = ai_services or get_ai_services(self.settings)
+        self.knowledge_base_path = (
+            self.settings.app.PROJECT_ROOT / "eufm" / "Horizon_Xilella.md"
+        )
 
     def get_project_context(self) -> str:
         try:
             with open(self.knowledge_base_path, "r") as f:
                 return f.read()
         except FileNotFoundError:
-            self.logger.error(f"Knowledge base file not found at {self.knowledge_base_path}")
+            self.logger.error(
+                f"Knowledge base file not found at {self.knowledge_base_path}"
+            )
             return "Project context not found."
+
+    async def _generate_email(self, prompt: str) -> str:
+        messages = [
+            {
+                "role": "system",
+                "content": "You are a project manager drafting outreach emails.",
+            },
+            {"role": "user", "content": prompt},
+        ]
+        return await self.ai_services.chat_completion(
+            messages, model="gpt-4-turbo", temperature=0.7
+        )
 
     def draft_outreach_emails(self, partner_data: List[Dict[str, Any]]) -> List[str]:
         project_context = self.get_project_context()
@@ -43,48 +67,69 @@ class DocumentAgent(BaseAgent):
             - The goal is to initiate a conversation about potential collaboration.
             - Address the email to the contact person if available, otherwise use a generic greeting.
             """
-            response = self.client.chat.completions.create(
-                model="gpt-4-turbo",
-                messages=[
-                    {"role": "system", "content": "You are a project manager drafting outreach emails."},
-                    {"role": "user", "content": prompt},
-                ],
-                temperature=0.7,
-            )
-            email_content = response.choices[0].message.content
+            email_content = asyncio.run(self._generate_email(prompt))
             emails.append(email_content)
         return emails
+
+    def draft_outreach_emails_direct(
+        self, partner_data: List[Dict[str, Any]]
+    ) -> List[str]:  # pragma: no cover - deprecated
+        warnings.warn(
+            "draft_outreach_emails_direct is deprecated; use draft_outreach_emails",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.draft_outreach_emails(partner_data)
 
     def run(self, parameters: Dict[str, Any]) -> Any:
         """
         Runs the document agent. Expects 'partner_data' in parameters.
         """
         self.status = AgentStatus.RUNNING
+        run_id = parameters.get("run_id")
+        task_id = parameters.get("task_id")
         partner_data = parameters.get("partner_data")
         if not partner_data or not isinstance(partner_data, list):
             self.error = "Missing or invalid 'partner_data' parameter."
             self.status = AgentStatus.FAILED
-            self.logger.error(
-                f"{ValidationError.__name__}: {self.error}"
+            log_event(
+                self.logger,
+                logging.ERROR,
+                "AGENT_ERROR",
+                self.error,
+                run_id,
+                task_id,
+                error_code="INVALID_PARTNER_DATA",
             )
-            raise ValidationError(self.error)
+            raise ValueError(self.error)
 
-        self.logger.info(f"Drafting outreach emails for {len(partner_data)} partner(s).")
-        
+        self.logger.info(
+            f"Drafting outreach emails for {len(partner_data)} partner(s)."
+        )
+
         try:
             result = self.draft_outreach_emails(partner_data)
             self.result = result
             self.status = AgentStatus.COMPLETED
-            self.logger.info("Successfully drafted outreach emails.")
+            log_event(
+                self.logger,
+                logging.INFO,
+                "AGENT_SUCCESS",
+                "Successfully drafted outreach emails.",
+                run_id,
+                task_id,
+            )
             return result
         except Exception as e:  # pragma: no cover - network errors not deterministic
             self.error = str(e)
             self.status = AgentStatus.FAILED
-            self.logger.error(
-                f"Failed to draft emails: {e.__class__.__name__}: {e}"
+            log_event(
+                self.logger,
+                logging.ERROR,
+                "AGENT_ERROR",
+                f"Failed to draft emails: {e}",
+                run_id,
+                task_id,
+                error_code="EMAIL_DRAFT_FAIL",
             )
-            raise AgentExecutionError(
-                f"Failed to draft outreach emails: {e}",
-                agent_type="document",
-                agent_id=self.agent_id,
-            ) from e
+            raise

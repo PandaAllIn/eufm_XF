@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""
-Unified CLI entry point.
-"""
-import sys
+"""Deprecated entry point. Delegates to the unified CLI."""
+
 from app.cli.main import main
+
 
 if __name__ == "__main__":
     sys.exit(main())
