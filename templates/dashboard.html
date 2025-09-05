@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}XYL-PHOS-CURE Dashboard - Overview{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Project Status Card -->
+    <div class="col-xl-8">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-rocket"></i>
+                    {{ project.full_title }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h6 class="text-success">🎉 Stage 1 Successfully Submitted!</h6>
+                        <p class="text-muted mb-2">
+                            <strong>Call:</strong> {{ project.call }}<br>
+                            <strong>Submitted:</strong> {{ project.submitted_date }}<br>
+                            <strong>Budget:</strong> €{{ "{:,}".format(project.budget) }}<br>
+                            <strong>Duration:</strong> {{ project.duration_months }} months
+                        </p>
+                        
+                        <div class="row text-center mt-3">
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <div id="days-to-results" class="h4 text-primary mb-0">--</div>
+                                    <small class="text-muted">Days to Results</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <div class="h4 text-warning mb-0">60-70%</div>
+                                    <small class="text-muted">Stage 1→2 Odds</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <div class="h4 text-info mb-0">15-20%</div>
+                                    <small class="text-muted">Overall Success</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="progress-circle">
+                            <canvas id="progressChart" width="150" height="150"></canvas>
+                        </div>
+                        <h6 class="mt-2 text-success">Stage 1 Complete</h6>
+                        <p class="small text-muted">Awaiting evaluation results</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="col-xl-4">
+        <div class="card mb-4 bg-light">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-chart-line"></i> Quick Stats</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span><i class="fas fa-flask text-primary"></i> Innovation Level</span>
+                    <strong class="text-success">HIGH</strong>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span><i class="fas fa-target text-danger"></i> Market Gap</span>
+                    <strong class="text-danger">€5.5B Threat</strong>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span><i class="fas fa-users text-info"></i> Target Partners</span>
+                    <strong class="text-warning">5 Searching</strong>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-graduation-cap text-success"></i> PhD Expertise</span>
+                    <strong class="text-success">Phosphinic Acid</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Timeline Overview -->
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-timeline"></i> Project Timeline</h6>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    {% for milestone in milestones %}
+                    <div class="timeline-item {{ milestone.status }}">
+                        <div class="timeline-marker">
+                            {% if milestone.status == 'completed' %}
+                                <i class="fas fa-check text-success"></i>
+                            {% elif milestone.status == 'in_progress' %}
+                                <i class="fas fa-spinner text-warning"></i>
+                            {% else %}
+                                <i class="fas fa-clock text-muted"></i>
+                            {% endif %}
+                        </div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">{{ milestone.title }}</h6>
+                            <p class="mb-1 text-muted small">{{ milestone.description }}</p>
+                            <small class="text-muted">{{ milestone.date }}</small>
+                            <div class="progress mt-1" style="height: 4px;">
+                                <div class="progress-bar 
+                                    {% if milestone.status == 'completed' %}bg-success
+                                    {% elif milestone.status == 'in_progress' %}bg-warning
+                                    {% else %}bg-light{% endif %}" 
+                                    style="width: {{ milestone.progress }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Consortium Building -->
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-users"></i> Consortium Building Progress
+                    <span class="badge bg-warning ms-2">5 Partners Needed</span>
+                </h6>
+            </div>
+            <div class="card-body">
+                {% for partner in consortium[:3] %}
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                    <div>
+                        <h6 class="mb-1">{{ partner.role }}</h6>
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt"></i> {{ partner.target_country }}
+                        </small>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-secondary">{{ partner.status.title() }}</span>
+                        <div class="text-muted small">
+                            {% if partner.priority == 'high' %}
+                                <i class="fas fa-exclamation-triangle text-warning"></i> High Priority
+                            {% else %}
+                                <i class="fas fa-info-circle text-info"></i> Medium Priority
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('consortium') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye"></i> View All Partners
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Documents -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-file-alt"></i> Key Project Documents</h6>
+            </div>
+            <div class="card-body">
+                <div id="documents-list" class="row">
+                    <!-- Documents will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Load project status data
+fetch('/api/project-status')
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('days-to-results').textContent = data.days_to_results;
+    })
+    .catch(error => console.error('Error loading project status:', error));
+
+// Load documents
+fetch('/api/documents')
+    .then(response => response.json())
+    .then(documents => {
+        const container = document.getElementById('documents-list');
+        container.innerHTML = documents.map(doc => `
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-file-${doc.type === 'proposal' ? 'contract' : 'alt'}"></i>
+                            ${doc.name}
+                        </h6>
+                        <p class="card-text small text-muted">${doc.description}</p>
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">${(doc.size / 1024).toFixed(1)} KB</small>
+                            <small class="text-muted">${doc.modified}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    })
+    .catch(error => console.error('Error loading documents:', error));
+
+// Create progress circle chart
+const ctx = document.getElementById('progressChart').getContext('2d');
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data: [100, 0],
+            backgroundColor: ['#198754', '#e9ecef'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: false,
+        plugins: {
+            legend: { display: false }
+        },
+        cutout: '75%'
+    }
+});
+</script>
+{% endblock %}

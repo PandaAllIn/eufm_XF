@@ -1,0 +1,268 @@
+/* XYL-PHOS-CURE Dashboard Styles */
+
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --info-color: #0dcaf0;
+    --xylella-green: #2d5a2d;
+    --olive-gold: #b8860b;
+}
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar-brand strong {
+    font-size: 1.3rem;
+    letter-spacing: -0.5px;
+}
+
+.navbar-brand small {
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+}
+
+/* Timeline Styles */
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.75rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -2.25rem;
+    top: 0.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+}
+
+.timeline-item.completed .timeline-marker {
+    background: #d1e7dd;
+    border-color: var(--success-color);
+}
+
+.timeline-item.in_progress .timeline-marker {
+    background: #fff3cd;
+    border-color: var(--warning-color);
+}
+
+.timeline-content {
+    padding-left: 1rem;
+    min-height: 1.5rem;
+}
+
+/* Progress Circle */
+.progress-circle {
+    position: relative;
+    display: inline-block;
+}
+
+.progress-circle canvas {
+    transform: rotate(-90deg);
+}
+
+/* Cards Enhancement */
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+    border-bottom: none;
+}
+
+.card-header h5,
+.card-header h6 {
+    font-weight: 600;
+}
+
+/* Status Badges */
+.badge {
+    font-weight: 500;
+    letter-spacing: 0.025em;
+}
+
+/* Consortium Partner Cards */
+.partner-card {
+    border-left: 4px solid var(--info-color);
+    transition: border-color 0.2s ease;
+}
+
+.partner-card.high-priority {
+    border-left-color: var(--warning-color);
+}
+
+.partner-card:hover {
+    border-left-color: var(--success-color);
+}
+
+/* Document Cards */
+.document-card {
+    border: 1px solid #e9ecef;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+}
+
+.document-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* Stats Cards */
+.stats-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .timeline {
+        padding-left: 1rem;
+    }
+    
+    .timeline-marker {
+        left: -1.25rem;
+        width: 1rem;
+        height: 1rem;
+        font-size: 0.6rem;
+    }
+    
+    .timeline::before {
+        left: -0.75rem;
+    }
+}
+
+/* Loading Animations */
+.loading {
+    opacity: 0.6;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Success States */
+.text-xylella {
+    color: var(--xylella-green) !important;
+}
+
+.bg-xylella {
+    background-color: var(--xylella-green) !important;
+}
+
+.border-xylella {
+    border-color: var(--xylella-green) !important;
+}
+
+/* Priority Indicators */
+.priority-high {
+    border-left: 4px solid var(--danger-color);
+}
+
+.priority-medium {
+    border-left: 4px solid var(--warning-color);
+}
+
+.priority-low {
+    border-left: 4px solid var(--info-color);
+}
+
+/* Custom Progress Bars */
+.progress {
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+}
+
+/* Footer Styling */
+footer {
+    margin-top: auto;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Button Enhancements */
+.btn {
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.25);
+}
+
+/* Table Styling */
+.table {
+    font-size: 0.9rem;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: var(--xylella-green);
+}
+
+/* Alert Styling */
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d1e7dd, #a3d9a3);
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fff3cd, #ffe69c);
+}
+
+/* Icon Styling */
+.fa-leaf {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Milestone Status Colors */
+.milestone-completed {
+    color: var(--success-color);
+}
+
+.milestone-in-progress {
+    color: var(--warning-color);
+}
+
+.milestone-pending {
+    color: #6c757d;
+}

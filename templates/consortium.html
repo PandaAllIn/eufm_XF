@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}XYL-PHOS-CURE Dashboard - Consortium{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-users"></i>
+                    Consortium Building - Stage 2 Partners
+                </h5>
+                <small class="text-light">Multi-actor approach: Research + Industry + Farmers + Policy</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Partner Requirements -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="mb-0">Partner Search Progress</h6>
+                    <div class="badge bg-warning">5 Partners Needed</div>
+                </div>
+                
+                <div class="partner-list">
+                    {% for partner in consortium %}
+                    <div class="card mb-3 partner-card {{ partner.priority }}-priority">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <h6 class="mb-1">{{ partner.role }}</h6>
+                                    <p class="text-muted mb-0">
+                                        <i class="fas fa-map-marker-alt"></i> {{ partner.target_country }}
+                                    </p>
+                                </div>
+                                <div class="col-md-5">
+                                    <p class="small mb-0">{{ partner.description }}</p>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <span class="badge 
+                                        {% if partner.status == 'searching' %}bg-secondary
+                                        {% elif partner.status == 'contacted' %}bg-warning
+                                        {% elif partner.status == 'negotiating' %}bg-info
+                                        {% elif partner.status == 'confirmed' %}bg-success
+                                        {% else %}bg-light text-dark{% endif %} mb-2">
+                                        {{ partner.status.title() }}
+                                    </span>
+                                    <br>
+                                    <small class="text-muted">
+                                        {% if partner.priority == 'high' %}
+                                            <i class="fas fa-exclamation-triangle text-warning"></i> High Priority
+                                        {% else %}
+                                            <i class="fas fa-info-circle text-info"></i> Medium Priority
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Consortium Strategy -->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="fas fa-strategy"></i> Search Strategy</h6>
+            </div>
+            <div class="card-body">
+                <div class="strategy-item mb-3">
+                    <h6><i class="fas fa-search text-primary"></i> Partner Search Channels</h6>
+                    <ul class="list-unstyled small">
+                        <li><i class="fas fa-globe"></i> EU Partner Search Portal</li>
+                        <li><i class="fas fa-phone"></i> National Contact Points</li>
+                        <li><i class="fas fa-calendar"></i> Brokerage Events</li>
+                        <li><i class="fas fa-network-wired"></i> Research Networks</li>
+                    </ul>
+                </div>
+                
+                <div class="strategy-item mb-3">
+                    <h6><i class="fas fa-target text-success"></i> Target Regions</h6>
+                    <div class="region-tags">
+                        <span class="badge bg-primary me-1 mb-1">Spain</span>
+                        <span class="badge bg-primary me-1 mb-1">Italy</span>
+                        <span class="badge bg-primary me-1 mb-1">Portugal</span>
+                        <span class="badge bg-secondary me-1 mb-1">Germany</span>
+                        <span class="badge bg-secondary me-1 mb-1">France</span>
+                    </div>
+                </div>
+                
+                <div class="strategy-item">
+                    <h6><i class="fas fa-clock text-warning"></i> Timeline</h6>
+                    <div class="timeline-mini">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small">Partner Identification</span>
+                            <span class="small text-muted">Oct 2025</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small">Initial Contacts</span>
+                            <span class="small text-muted">Nov 2025</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small">Negotiations</span>
+                            <span class="small text-muted">Dec 2025</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="small"><strong>Agreements</strong></span>
+                            <span class="small text-danger"><strong>Dec 31, 2025</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h6 class="mb-0"><i class="fas fa-handshake"></i> Consortium Requirements</h6>
+            </div>
+            <div class="card-body">
+                <div class="requirement-check">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small">Minimum 3 countries</span>
+                        <i class="fas fa-check text-success"></i>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small">Multi-actor approach</span>
+                        <i class="fas fa-check text-success"></i>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small">SME coordinator</span>
+                        <i class="fas fa-check text-success"></i>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small">Research expertise</span>
+                        <i class="fas fa-clock text-warning"></i>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small">Farmer involvement</span>
+                        <i class="fas fa-clock text-warning"></i>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="small">Industry partner</span>
+                        <i class="fas fa-clock text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Critical Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <small><strong>Next 30 days:</strong> Identify and contact priority partners in Spain, Italy, and Portugal.</small>
+                </div>
+                
+                <div class="action-items">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="action1">
+                        <label class="form-check-label small" for="action1">
+                            Contact Spanish plant pathology institutes
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="action2">
+                        <label class="form-check-label small" for="action2">
+                            Reach out to Italian Xylella research groups
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="action3">
+                        <label class="form-check-label small" for="action3">
+                            Find Portuguese agricultural cooperatives
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="action4">
+                        <label class="form-check-label small" for="action4">
+                            Attend Cluster 6 brokerage events
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Partner Details Modal -->
+<div class="modal fade" id="partnerModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Partner Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Requirements</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> EU Member State or Associated Country</li>
+                            <li><i class="fas fa-check text-success"></i> Relevant expertise and facilities</li>
+                            <li><i class="fas fa-check text-success"></i> Previous EU project experience</li>
+                            <li><i class="fas fa-check text-success"></i> Multi-actor approach commitment</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Preferred Qualifications</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-star text-warning"></i> Xylella fastidiosa expertise</li>
+                            <li><i class="fas fa-star text-warning"></i> Living lab experience</li>
+                            <li><i class="fas fa-star text-warning"></i> Industry connections</li>
+                            <li><i class="fas fa-star text-warning"></i> Strong track record</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save Contact</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add interactivity to partner cards
+document.querySelectorAll('.partner-card').forEach(card => {
+    card.addEventListener('click', function() {
+        // Show partner details modal
+        const modal = new bootstrap.Modal(document.getElementById('partnerModal'));
+        modal.show();
+    });
+    
+    card.style.cursor = 'pointer';
+});
+
+// Save action items to localStorage
+document.querySelectorAll('.action-items input[type="checkbox"]').forEach(checkbox => {
+    const id = checkbox.id;
+    
+    // Load saved state
+    if (localStorage.getItem(id) === 'true') {
+        checkbox.checked = true;
+    }
+    
+    // Save state on change
+    checkbox.addEventListener('change', function() {
+        localStorage.setItem(id, this.checked);
+    });
+});
+
+// Update partner search progress
+function updateSearchProgress() {
+    // This would typically connect to a backend API
+    // For now, we'll simulate progress updates
+    console.log('Updating partner search progress...');
+}
+
+// Refresh data every 5 minutes
+setInterval(updateSearchProgress, 300000);
+</script>
+{% endblock %}

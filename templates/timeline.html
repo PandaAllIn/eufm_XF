@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block title %}XYL-PHOS-CURE Dashboard - Timeline{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-timeline"></i>
+                    Project Timeline - XYL-PHOS-CURE
+                </h5>
+                <small class="text-light">Track progress through Horizon Europe submission process</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Timeline Visualization -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="timeline-extended">
+                    {% for milestone in milestones %}
+                    <div class="timeline-item-extended {{ milestone.status }}" data-milestone="{{ milestone.id }}">
+                        <div class="timeline-date">
+                            <div class="date-badge">
+                                {{ milestone.date }}
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-marker-extended">
+                            {% if milestone.status == 'completed' %}
+                                <i class="fas fa-check-circle text-success"></i>
+                            {% elif milestone.status == 'in_progress' %}
+                                <i class="fas fa-play-circle text-warning"></i>
+                            {% else %}
+                                <i class="fas fa-clock text-muted"></i>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="timeline-content-extended">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-2">
+                                        {{ milestone.title }}
+                                        <span class="badge ms-2
+                                            {% if milestone.status == 'completed' %}bg-success
+                                            {% elif milestone.status == 'in_progress' %}bg-warning
+                                            {% else %}bg-secondary{% endif %}">
+                                            {{ milestone.status.title() }}
+                                        </span>
+                                    </h5>
+                                    <p class="card-text">{{ milestone.description }}</p>
+                                    
+                                    <div class="progress mb-2" style="height: 8px;">
+                                        <div class="progress-bar 
+                                            {% if milestone.status == 'completed' %}bg-success
+                                            {% elif milestone.status == 'in_progress' %}bg-warning progress-bar-striped progress-bar-animated
+                                            {% else %}bg-light{% endif %}" 
+                                            style="width: {{ milestone.progress }}%"></div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">Progress: {{ milestone.progress }}%</small>
+                                        {% if milestone.status == 'completed' %}
+                                            <span class="text-success small">
+                                                <i class="fas fa-check"></i> Complete
+                                            </span>
+                                        {% elif milestone.status == 'in_progress' %}
+                                            <span class="text-warning small">
+                                                <i class="fas fa-spinner fa-spin"></i> In Progress
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted small">
+                                                <i class="fas fa-hourglass-start"></i> Pending
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Timeline Stats & Info -->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="fas fa-chart-pie"></i> Timeline Overview</h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <canvas id="timelineChart" width="200" height="200"></canvas>
+                </div>
+                
+                <div class="timeline-stats">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><i class="fas fa-check-circle text-success"></i> Completed</span>
+                        <strong>1 milestone</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><i class="fas fa-play-circle text-warning"></i> In Progress</span>
+                        <strong>1 milestone</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><i class="fas fa-clock text-muted"></i> Pending</span>
+                        <strong>2 milestones</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span><strong>Total Progress</strong></span>
+                        <strong class="text-primary">30%</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0"><i class="fas fa-calendar-alt"></i> Key Dates</h6>
+            </div>
+            <div class="card-body">
+                <div class="key-dates">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <div>
+                            <strong>Stage 1 Results</strong>
+                            <div class="text-muted small">EU evaluation results</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-primary">Jan 15, 2026</div>
+                            <div class="text-muted small" id="days-to-results">-- days</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <div>
+                            <strong>Stage 2 Deadline</strong>
+                            <div class="text-muted small">Full proposal due</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-danger">Feb 18, 2026</div>
+                            <div class="text-muted small" id="days-to-stage2">-- days</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Consortium Deadline</strong>
+                            <div class="text-muted small">Partners finalized</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-warning">Dec 31, 2025</div>
+                            <div class="text-muted small" id="days-to-consortium">-- days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h6 class="mb-0"><i class="fas fa-bullseye"></i> Critical Path</h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Priority Focus:</strong> Consortium building is critical path for Stage 2 success.
+                </div>
+                
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-users text-primary"></i>
+                        <strong>Partner Search</strong> - Target Spain, Italy, Portugal
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-handshake text-success"></i>
+                        <strong>Agreements</strong> - Consortium agreements by Dec 31
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-file-contract text-info"></i>
+                        <strong>Stage 2 Prep</strong> - Full proposal ready by Feb 1
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline-extended {
+    position: relative;
+    padding: 0;
+}
+
+.timeline-item-extended {
+    display: flex;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.timeline-date {
+    flex: 0 0 120px;
+    text-align: right;
+    padding-right: 2rem;
+}
+
+.date-badge {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.timeline-item-extended.completed .date-badge {
+    background: #d1e7dd;
+    border-color: #198754;
+    color: #198754;
+}
+
+.timeline-item-extended.in_progress .date-badge {
+    background: #fff3cd;
+    border-color: #ffc107;
+    color: #b45309;
+}
+
+.timeline-marker-extended {
+    flex: 0 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    position: relative;
+}
+
+.timeline-marker-extended::before {
+    content: '';
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100px;
+    background: #e9ecef;
+    z-index: -1;
+}
+
+.timeline-item-extended:last-child .timeline-marker-extended::before {
+    display: none;
+}
+
+.timeline-content-extended {
+    flex: 1;
+    margin-left: 2rem;
+}
+
+@media (max-width: 768px) {
+    .timeline-item-extended {
+        flex-direction: column;
+    }
+    
+    .timeline-date {
+        flex: none;
+        text-align: left;
+        padding-right: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .timeline-content-extended {
+        margin-left: 0;
+    }
+    
+    .timeline-marker-extended::before {
+        display: none;
+    }
+}
+</style>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Calculate and display countdown timers
+function updateCountdowns() {
+    const now = new Date();
+    const results = new Date('2026-01-15');
+    const stage2 = new Date('2026-02-18');
+    const consortium = new Date('2025-12-31');
+    
+    const daysToResults = Math.ceil((results - now) / (1000 * 60 * 60 * 24));
+    const daysToStage2 = Math.ceil((stage2 - now) / (1000 * 60 * 60 * 24));
+    const daysToConsortium = Math.ceil((consortium - now) / (1000 * 60 * 60 * 24));
+    
+    document.getElementById('days-to-results').textContent = daysToResults + ' days';
+    document.getElementById('days-to-stage2').textContent = daysToStage2 + ' days';
+    document.getElementById('days-to-consortium').textContent = daysToConsortium + ' days';
+}
+
+// Create timeline overview chart
+const ctx = document.getElementById('timelineChart').getContext('2d');
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Completed', 'In Progress', 'Pending'],
+        datasets: [{
+            data: [1, 1, 2],
+            backgroundColor: ['#198754', '#ffc107', '#6c757d'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: false,
+        plugins: {
+            legend: { 
+                display: false 
+            }
+        },
+        cutout: '60%'
+    }
+});
+
+// Initialize countdowns
+updateCountdowns();
+setInterval(updateCountdowns, 3600000); // Update every hour
+</script>
+{% endblock %}

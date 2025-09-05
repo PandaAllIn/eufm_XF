@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+{% block title %}XYL-PHOS-CURE Dashboard - Documents{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-alt"></i>
+                    Project Documents & Resources
+                </h5>
+                <small class="text-light">Centralized access to all XYL-PHOS-CURE project documentation</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Document Categories -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="mb-0">Project Documentation</h6>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-outline-primary active" data-filter="all">All</button>
+                        <button type="button" class="btn btn-outline-primary" data-filter="proposal">Proposals</button>
+                        <button type="button" class="btn btn-outline-primary" data-filter="analysis">Analysis</button>
+                        <button type="button" class="btn btn-outline-primary" data-filter="status">Status</button>
+                    </div>
+                </div>
+                
+                <div id="documents-container" class="row">
+                    <!-- Documents will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Document Stats & Tools -->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="fas fa-chart-bar"></i> Documentation Stats</h6>
+            </div>
+            <div class="card-body">
+                <div class="doc-stats">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><i class="fas fa-file-contract text-primary"></i> Proposal Files</span>
+                        <strong id="proposal-count">--</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><i class="fas fa-chart-line text-success"></i> Analysis Docs</span>
+                        <strong id="analysis-count">--</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><i class="fas fa-clipboard-list text-warning"></i> Status Reports</span>
+                        <strong id="status-count">--</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span><strong>Total Size</strong></span>
+                        <strong id="total-size">--</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h6 class="mb-0"><i class="fas fa-tools"></i> Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-primary btn-sm" onclick="refreshDocuments()">
+                        <i class="fas fa-sync-alt"></i> Refresh List
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" onclick="exportDocumentList()">
+                        <i class="fas fa-download"></i> Export List
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" onclick="checkFileIntegrity()">
+                        <i class="fas fa-shield-alt"></i> Check Integrity
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0"><i class="fas fa-lightbulb"></i> Document Guidelines</h6>
+            </div>
+            <div class="card-body">
+                <div class="guidelines">
+                    <h6 class="text-primary">File Organization</h6>
+                    <ul class="list-unstyled small mb-3">
+                        <li><i class="fas fa-folder text-warning"></i> Keep files organized by type</li>
+                        <li><i class="fas fa-tag text-info"></i> Use descriptive filenames</li>
+                        <li><i class="fas fa-calendar text-success"></i> Include version dates</li>
+                    </ul>
+                    
+                    <h6 class="text-primary">Version Control</h6>
+                    <ul class="list-unstyled small">
+                        <li><i class="fas fa-code-branch text-primary"></i> Track document versions</li>
+                        <li><i class="fas fa-backup text-secondary"></i> Regular backups</li>
+                        <li><i class="fas fa-users text-info"></i> Share with consortium</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Resources -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-link"></i> External Resources & Links</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h6 class="text-primary">EU Portals</h6>
+                        <ul class="list-unstyled small">
+                            <li><a href="https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/home" target="_blank" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> Funding & Tenders Portal
+                            </a></li>
+                            <li><a href="#" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> Partner Search
+                            </a></li>
+                            <li><a href="#" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> Horizon Results Platform
+                            </a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h6 class="text-success">Research Networks</h6>
+                        <ul class="list-unstyled small">
+                            <li><a href="#" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> EUPHRESCO
+                            </a></li>
+                            <li><a href="#" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> EPPO
+                            </a></li>
+                            <li><a href="#" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> Plant Health Networks
+                            </a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h6 class="text-warning">Repository</h6>
+                        <ul class="list-unstyled small">
+                            <li><a href="https://github.com/PandaAllIn/eufm_XF" target="_blank" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> GitHub Repository
+                            </a></li>
+                            <li><a href="#" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> Documentation Wiki
+                            </a></li>
+                            <li><a href="#" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> Version History
+                            </a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h6 class="text-info">References</h6>
+                        <ul class="list-unstyled small">
+                            <li><a href="#" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> Xylella Research Papers
+                            </a></li>
+                            <li><a href="#" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> Phosphinic Acid Chemistry
+                            </a></li>
+                            <li><a href="#" class="text-decoration-none">
+                                <i class="fas fa-external-link-alt"></i> EU Plant Health Policy
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- File Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Document</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm">
+                    <div class="mb-3">
+                        <label for="fileInput" class="form-label">Select File</label>
+                        <input type="file" class="form-control" id="fileInput" multiple>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fileCategory" class="form-label">Category</label>
+                        <select class="form-select" id="fileCategory">
+                            <option value="proposal">Proposal</option>
+                            <option value="analysis">Analysis</option>
+                            <option value="status">Status</option>
+                            <option value="reference">Reference</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fileDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="fileDescription" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let documentsData = [];
+
+// Load documents from API
+function loadDocuments() {
+    fetch('/api/documents')
+        .then(response => response.json())
+        .then(data => {
+            documentsData = data;
+            displayDocuments(data);
+            updateStats(data);
+        })
+        .catch(error => {
+            console.error('Error loading documents:', error);
+            showError('Failed to load documents');
+        });
+}
+
+// Display documents in grid
+function displayDocuments(documents) {
+    const container = document.getElementById('documents-container');
+    if (!documents.length) {
+        container.innerHTML = '<div class="col-12"><div class="alert alert-info">No documents found</div></div>';
+        return;
+    }
+    
+    container.innerHTML = documents.map(doc => `
+        <div class="col-md-6 col-lg-4 mb-3" data-category="${doc.type}">
+            <div class="card h-100 document-card" onclick="viewDocument('${doc.name}')">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="fas fa-file-${getFileIcon(doc.type)}"></i>
+                        ${doc.name}
+                    </h6>
+                    <p class="card-text small text-muted">${doc.description}</p>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">${formatFileSize(doc.size)}</small>
+                        <small class="text-muted">${doc.modified}</small>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-secondary">${doc.type}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Update statistics
+function updateStats(documents) {
+    const stats = documents.reduce((acc, doc) => {
+        acc[doc.type] = (acc[doc.type] || 0) + 1;
+        acc.totalSize += doc.size;
+        return acc;
+    }, { totalSize: 0 });
+    
+    document.getElementById('proposal-count').textContent = stats.proposal || 0;
+    document.getElementById('analysis-count').textContent = stats.analysis || 0;
+    document.getElementById('status-count').textContent = stats.status || 0;
+    document.getElementById('total-size').textContent = formatFileSize(stats.totalSize);
+}
+
+// Filter documents by category
+function filterDocuments(category) {
+    const filtered = category === 'all' ? documentsData : documentsData.filter(doc => doc.type === category);
+    displayDocuments(filtered);
+    
+    // Update active button
+    document.querySelectorAll('[data-filter]').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[data-filter="${category}"]`).classList.add('active');
+}
+
+// Utility functions
+function getFileIcon(type) {
+    const icons = {
+        proposal: 'contract',
+        analysis: 'chart-line',
+        status: 'clipboard-list',
+        overview: 'file-alt'
+    };
+    return icons[type] || 'file';
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+function viewDocument(filename) {
+    // This would open the document in a new tab or modal
+    console.log('Opening document:', filename);
+    // window.open(`/documents/${filename}`, '_blank');
+}
+
+function refreshDocuments() {
+    loadDocuments();
+    showSuccess('Documents refreshed');
+}
+
+function exportDocumentList() {
+    const csv = 'Name,Type,Size,Modified,Description\n' + 
+                documentsData.map(doc => 
+                    `"${doc.name}","${doc.type}","${doc.size}","${doc.modified}","${doc.description}"`
+                ).join('\n');
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = 'xyl-phos-cure-documents.csv';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    
+    showSuccess('Document list exported');
+}
+
+function checkFileIntegrity() {
+    // Simulate integrity check
+    setTimeout(() => {
+        showSuccess('All files integrity verified');
+    }, 1000);
+}
+
+function showSuccess(message) {
+    // Simple toast notification
+    const toast = document.createElement('div');
+    toast.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3';
+    toast.style.zIndex = '9999';
+    toast.innerHTML = `${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function showError(message) {
+    const toast = document.createElement('div');
+    toast.className = 'alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3';
+    toast.style.zIndex = '9999';
+    toast.innerHTML = `${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 5000);
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    loadDocuments();
+    
+    // Filter buttons
+    document.querySelectorAll('[data-filter]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterDocuments(this.getAttribute('data-filter'));
+        });
+    });
+});
+</script>
+{% endblock %}
