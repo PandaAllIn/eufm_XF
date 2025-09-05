@@ -1,5 +1,0 @@
-rules:
-  - name: "Overdue Tasks"
-    description: "Tasks should not be past their end date if not completed."
-    condition: "task.end_date < now and task.status != 'Completed'"
-    severity: "High"

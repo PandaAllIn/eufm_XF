@@ -43,6 +43,8 @@ XYL-PHOS-CURE directly addresses this central failure point. It is not an increm
 
 The core novelty of XYL-PHOS-CURE lies in its **strategic application of advanced organophosphorus chemistry to solve a major bacteriological problem in plant health**. Our approach is based on a powerful scientific rationale, moving from established principles to a novel application.
 
+**Multi-Disciplinary Integration with Social Sciences, Humanities, and Arts (SSH):** Recognizing that successful agricultural innovation requires understanding of socio-economic factors, the project integrates agricultural economics analysis to assess adoption barriers, farmer willingness-to-pay, and the broader economic implications of our therapeutic approach. This SSH dimension will inform both our technology development (ensuring practical applicability) and our dissemination strategy (understanding market dynamics and social acceptance factors).
+
 **Scientific Rationale: The Conceptual Leap**
 
 Our hypothesis is built on a logical extension of established science:
@@ -75,6 +77,7 @@ Our methodology follows a rigorous, stage-gated progression from concept to proo
 
 **Phase 4: Real-World Proof-of-Concept (Exemplary WP5)**
 *   **"Living Lab" Trials:** In close collaboration with end-user partners (e.g., agricultural cooperatives), the top candidate formulation will be tested in small-scale, highly controlled field settings in demarcated zones. These trials will be co-designed with farmers to ensure practical relevance and will provide the crucial data to validate the technology in a relevant environment (TRL 5-6).
+*   **JRC Knowledge Centre Collaboration:** Building on the project's scientific foundation, we will establish collaborative links with the European Commission's Joint Research Centre (JRC) Knowledge Centre for plant health, particularly leveraging their expertise in phytosanitary risk assessment and their comprehensive databases on *X. fastidiosa* distribution and impact. This collaboration will enhance the project's policy relevance and ensure our findings contribute to evidence-based EU policy development.
 
 This robust, multi-stage methodology ensures that the project's ambitious goals are pursued through a logical, scientifically sound, and de-risked pathway, maximising the probability of success. The integration of end-users from the design of field trials onwards embodies the **Multi-Actor Approach** required by the call, ensuring our solution is not only effective but also practical and adoptable.
 
@@ -124,11 +127,13 @@ The impact of *X. fastidiosa* extends beyond balance sheets into the heart of Eu
 *   **Preservation of Cultural Heritage:** The project will provide a tool to save ancient, centuries-old olive groves in Italy, Spain, and Greece, which are irreplaceable components of the Mediterranean landscape and cultural identity.
 *   **Strengthening Rural Communities:** By protecting the livelihoods of farmers and associated workers, our solution will combat rural depopulation and preserve the social fabric of communities dependent on agriculture.
 *   **Reducing Social Conflict:** An effective treatment will reduce the need for controversial mandatory felling orders, mitigating the significant social and political friction that currently hampers control efforts.
+*   **Gender Dimension:** While *X. fastidiosa* management does not present explicit gender-specific biological or technological challenges, the broader agricultural context demonstrates significant gender disparities in farm ownership, decision-making authority, and access to extension services. The project's dissemination and training activities will specifically address these disparities by ensuring equal participation of male and female farmers in our "Living Lab" demonstrations and by developing communication materials that are accessible and relevant to all farm decision-makers regardless of gender.
 
 **Environmental Impact:**
 XYL-PHOS-CURE is fully aligned with the **European Green Deal and Farm to Fork Strategy**.
 *   **Reduced Pesticide Use:** Current vector control strategies rely on broad-spectrum insecticides. By providing a direct treatment for the bacterium, our solution will reduce the pressure for intensive insecticide spraying, leading to positive outcomes for biodiversity, pollinators, and soil health.
 *   **Sustainable Intensification:** By saving productive trees from disease, the project supports the goal of producing more with less environmental impact, preventing the need to clear new land for agriculture.
+*   **FAIR Data Management:** The project is committed to implementing FAIR (Findable, Accessible, Interoperable, Reusable) data management principles throughout all research activities. All experimental data, chemical synthesis protocols, biological assay results, and field trial outcomes will be systematically documented, curated, and made available through appropriate open data repositories, ensuring maximum transparency and enabling future research building on our findings. This approach supports the European Open Science agenda and maximizes the long-term impact of EU investment in research.
 
 **Policy Impact:**
 The availability of a cure would be a **game-changer for EU plant health policy**. It would provide policymakers at the EU (DG SANTE) and national levels with a powerful new tool, enabling a shift from a rigid, defensive strategy to a more flexible and effective **Integrated Pest Management (IPM)** approach that includes therapeutic intervention. This could lead to a fundamental revision of EU Regulation 2020/1201, allowing for the management and recovery of infected orchards where eradication is no longer feasible or desirable.

@@ -1,2 +1,0 @@
-wbs_file: 'src/eufm_assistant/docs/project_wbs.yaml'
-rules_file: 'src/eufm_assistant/agents/monitor/rules/compliance_rules.yaml'
