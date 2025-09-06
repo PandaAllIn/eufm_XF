@@ -1,0 +1,53 @@
+{
+  "date": "2025-09-06",
+  "project": "XYL-PHOS-CURE",
+  "executive_summary": {
+    "priority_alerts": [],
+    "funding_opportunities": 0,
+    "regulatory_changes": 0,
+    "research_updates": 0,
+    "action_items": []
+  },
+  "detailed_findings": {
+    "horizon_europe": {
+      "timestamp": "2025-09-06T15:31:49.941639",
+      "search_keywords": [
+        "plant health",
+        "plant protection",
+        "agriculture",
+        "crop protection",
+        "xylella",
+        "plant disease",
+        "plant pathology",
+        "sustainable agriculture",
+        "farm to fork",
+        "green deal",
+        "phytosanitary"
+      ],
+      "new_calls": [],
+      "relevant_updates": [],
+      "deadline_alerts": []
+    },
+    "regulations": {
+      "timestamp": "2025-09-06T15:31:55.590469",
+      "regulation_updates": [],
+      "approval_pathways": [],
+      "compliance_changes": [],
+      "upcoming_deadlines": []
+    },
+    "research": {
+      "timestamp": "2025-09-06T15:31:55.591146",
+      "active_projects": [],
+      "funding_trends": [],
+      "research_gaps": [],
+      "collaboration_opportunities": [],
+      "competitive_landscape": []
+    }
+  },
+  "recommendations": [
+    "Monitor Stage 1 evaluation timeline for potential delays",
+    "Track new plant health funding opportunities",
+    "Analyze competitor research publications",
+    "Prepare regulatory compliance documentation"
+  ]
+}

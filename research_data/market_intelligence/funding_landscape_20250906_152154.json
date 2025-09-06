@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-09-06T15:21:54.096115",
+  "active_opportunities": [],
+  "investor_activities": [],
+  "grant_programs": [
+    {
+      "name": "Horizon Europe - Cluster 6",
+      "focus": "Food, Bioeconomy, Natural Resources, Agriculture",
+      "next_deadline": "2026-02-18",
+      "typical_funding": "\u20ac3-10M",
+      "relevance": "High - Direct match for XYL-PHOS-CURE"
+    },
+    {
+      "name": "EIC Accelerator",
+      "focus": "Deep tech innovation",
+      "next_deadline": "Rolling",
+      "typical_funding": "\u20ac2.5M grant + \u20ac15M equity",
+      "relevance": "Medium - For scaling phase"
+    },
+    {
+      "name": "EIT Food Innovation",
+      "focus": "Food system innovation",
+      "next_deadline": "2026-03-15",
+      "typical_funding": "\u20ac100K-\u20ac2M",
+      "relevance": "Medium - For pilot projects"
+    }
+  ],
+  "private_investment_trends": {
+    "agtech_hot_sectors": [
+      "Biological crop protection",
+      "Precision agriculture",
+      "Alternative proteins",
+      "Carbon farming"
+    ],
+    "average_valuations": {
+      "seed": "$5-15M",
+      "series_a": "$15-50M",
+      "series_b": "$50-150M"
+    }
+  }
+}

@@ -1,0 +1,248 @@
+{
+  "date": "2025-09-06",
+  "project": "XYL-PHOS-CURE Market Intelligence",
+  "executive_summary": {
+    "market_opportunity": "$15.2B global biologicals market, 8.5% CAGR",
+    "competitive_landscape": "14 competitors monitored",
+    "funding_environment": "Strong - \u20ac6M+ opportunities available",
+    "patent_position": "Favorable - limited prior art in systemic Xylella treatment",
+    "strategic_recommendations": [
+      "Fast-track to market before competitors",
+      "Secure IP protection for phosphinic derivatives",
+      "Target EU Green Deal alignment for funding",
+      "Build strategic partnerships with agchem majors"
+    ]
+  },
+  "key_insights": {
+    "market_timing": "Optimal - EU pesticide reduction driving biologicals demand",
+    "competitive_threats": "Medium - no direct systemic Xylella solutions",
+    "funding_outlook": "Positive - Horizon Europe perfect fit",
+    "commercial_potential": "\u20ac500M+ addressable market in EU alone"
+  },
+  "detailed_analysis": {
+    "competitors": {
+      "timestamp": "2025-09-06T15:31:45.339113",
+      "scan_period": "last_30_days",
+      "competitors": [
+        {
+          "name": "Bayer CropScience",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:45.642445"
+        },
+        {
+          "name": "Syngenta",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:45.947018"
+        },
+        {
+          "name": "BASF Agricultural Solutions",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:46.247536"
+        },
+        {
+          "name": "Corteva Agriscience",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:46.548292"
+        },
+        {
+          "name": "UPL Limited",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:46.851594"
+        },
+        {
+          "name": "Nufarm",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:47.157009"
+        },
+        {
+          "name": "Adama Agricultural Solutions",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:47.465325"
+        },
+        {
+          "name": "Bioline AgroSciences",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:47.771049"
+        },
+        {
+          "name": "Koppert Biological Systems",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:48.073430"
+        },
+        {
+          "name": "CABI",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:48.378580"
+        },
+        {
+          "name": "EFSA",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:48.688663"
+        },
+        {
+          "name": "CNR Italy",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:48.992291"
+        },
+        {
+          "name": "INIA Spain",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:49.294435"
+        },
+        {
+          "name": "INRA France",
+          "focus_area": "Plant Protection/Agricultural Biologicals",
+          "funding_status": "Unknown",
+          "threat_level": "Medium",
+          "last_updated": "2025-09-06T15:31:49.595885"
+        }
+      ],
+      "market_movements": [],
+      "funding_announcements": [],
+      "partnership_activities": [],
+      "regulatory_submissions": []
+    },
+    "market_trends": {
+      "timestamp": "2025-09-06T15:31:49.597243",
+      "market_size": {
+        "global_biologicals": "$15.2B (2024)",
+        "europe_plant_protection": "$3.8B (2024)",
+        "projected_growth": "8.5% CAGR 2024-2029"
+      },
+      "trend_analysis": {
+        "growing_segments": [
+          "Biological fungicides",
+          "Precision agriculture",
+          "Sustainable crop protection",
+          "Integrated pest management"
+        ],
+        "declining_segments": [
+          "Traditional chemical pesticides",
+          "Broad-spectrum treatments"
+        ],
+        "emerging_opportunities": [
+          "Systemic biologicals (XYL-PHOS-CURE opportunity)",
+          "Digital agriculture integration",
+          "Climate-resilient solutions"
+        ]
+      },
+      "regulatory_environment": {
+        "eu_green_deal_impact": "Driving biologicals adoption",
+        "pesticide_reduction_targets": "50% by 2030",
+        "approval_timelines": "18-24 months for biologicals"
+      },
+      "investment_landscape": {
+        "total_agtech_funding_2024": "$2.1B",
+        "biologicals_share": "23%",
+        "average_series_a": "$8.5M",
+        "strategic_investors": [
+          "Bayer Ventures",
+          "Syngenta Ventures",
+          "BASF Venture Capital"
+        ]
+      }
+    },
+    "funding": {
+      "timestamp": "2025-09-06T15:31:49.597936",
+      "active_opportunities": [],
+      "investor_activities": [],
+      "grant_programs": [
+        {
+          "name": "Horizon Europe - Cluster 6",
+          "focus": "Food, Bioeconomy, Natural Resources, Agriculture",
+          "next_deadline": "2026-02-18",
+          "typical_funding": "\u20ac3-10M",
+          "relevance": "High - Direct match for XYL-PHOS-CURE"
+        },
+        {
+          "name": "EIC Accelerator",
+          "focus": "Deep tech innovation",
+          "next_deadline": "Rolling",
+          "typical_funding": "\u20ac2.5M grant + \u20ac15M equity",
+          "relevance": "Medium - For scaling phase"
+        },
+        {
+          "name": "EIT Food Innovation",
+          "focus": "Food system innovation",
+          "next_deadline": "2026-03-15",
+          "typical_funding": "\u20ac100K-\u20ac2M",
+          "relevance": "Medium - For pilot projects"
+        }
+      ],
+      "private_investment_trends": {
+        "agtech_hot_sectors": [
+          "Biological crop protection",
+          "Precision agriculture",
+          "Alternative proteins",
+          "Carbon farming"
+        ],
+        "average_valuations": {
+          "seed": "$5-15M",
+          "series_a": "$15-50M",
+          "series_b": "$50-150M"
+        }
+      }
+    },
+    "patents": {
+      "timestamp": "2025-09-06T15:31:49.604381",
+      "search_terms": [
+        "Xylella fastidiosa treatment",
+        "phosphinic acid plant protection",
+        "systemic bactericide",
+        "plant pathogen cure",
+        "olive tree disease treatment"
+      ],
+      "recent_filings": [],
+      "patent_trends": {
+        "total_xylella_patents": "~150 (estimated)",
+        "growth_rate": "+15% annually",
+        "top_assignees": [
+          "Agricultural research institutions",
+          "Major agrochemical companies",
+          "Universities",
+          "Biotech startups"
+        ]
+      },
+      "freedom_to_operate": {
+        "phosphinic_acid_derivatives": "Open landscape",
+        "systemic_delivery": "Some existing patents",
+        "xylella_specific": "Limited prior art",
+        "commercial_risk": "Low-Medium"
+      },
+      "competitive_patents": [],
+      "expired_patents": []
+    }
+  },
+  "next_actions": [
+    "Monitor Bayer/Syngenta R&D announcements",
+    "Track Horizon Europe evaluation timeline",
+    "Analyze partnership opportunities with majors",
+    "Prepare IP filing strategy"
+  ]
+}

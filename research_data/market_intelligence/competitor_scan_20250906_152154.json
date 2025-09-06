@@ -1,0 +1,108 @@
+{
+  "timestamp": "2025-09-06T15:21:49.693836",
+  "scan_period": "last_30_days",
+  "competitors": [
+    {
+      "name": "Bayer CropScience",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:49.996600"
+    },
+    {
+      "name": "Syngenta",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:50.301199"
+    },
+    {
+      "name": "BASF Agricultural Solutions",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:50.606036"
+    },
+    {
+      "name": "Corteva Agriscience",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:50.911442"
+    },
+    {
+      "name": "UPL Limited",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:51.214677"
+    },
+    {
+      "name": "Nufarm",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:51.516716"
+    },
+    {
+      "name": "Adama Agricultural Solutions",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:51.824725"
+    },
+    {
+      "name": "Bioline AgroSciences",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:52.230108"
+    },
+    {
+      "name": "Koppert Biological Systems",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:52.560891"
+    },
+    {
+      "name": "CABI",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:52.865089"
+    },
+    {
+      "name": "EFSA",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:53.185194"
+    },
+    {
+      "name": "CNR Italy",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:53.489455"
+    },
+    {
+      "name": "INIA Spain",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:53.790306"
+    },
+    {
+      "name": "INRA France",
+      "focus_area": "Plant Protection/Agricultural Biologicals",
+      "funding_status": "Unknown",
+      "threat_level": "Medium",
+      "last_updated": "2025-09-06T15:21:54.094135"
+    }
+  ],
+  "market_movements": [],
+  "funding_announcements": [],
+  "partnership_activities": [],
+  "regulatory_submissions": []
+}

@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-09-06T15:31:49.597243",
+  "market_size": {
+    "global_biologicals": "$15.2B (2024)",
+    "europe_plant_protection": "$3.8B (2024)",
+    "projected_growth": "8.5% CAGR 2024-2029"
+  },
+  "trend_analysis": {
+    "growing_segments": [
+      "Biological fungicides",
+      "Precision agriculture",
+      "Sustainable crop protection",
+      "Integrated pest management"
+    ],
+    "declining_segments": [
+      "Traditional chemical pesticides",
+      "Broad-spectrum treatments"
+    ],
+    "emerging_opportunities": [
+      "Systemic biologicals (XYL-PHOS-CURE opportunity)",
+      "Digital agriculture integration",
+      "Climate-resilient solutions"
+    ]
+  },
+  "regulatory_environment": {
+    "eu_green_deal_impact": "Driving biologicals adoption",
+    "pesticide_reduction_targets": "50% by 2030",
+    "approval_timelines": "18-24 months for biologicals"
+  },
+  "investment_landscape": {
+    "total_agtech_funding_2024": "$2.1B",
+    "biologicals_share": "23%",
+    "average_series_a": "$8.5M",
+    "strategic_investors": [
+      "Bayer Ventures",
+      "Syngenta Ventures",
+      "BASF Venture Capital"
+    ]
+  }
+}
