@@ -1,0 +1,79 @@
+{
+  "timestamp": "2025-09-06T19:54:18.290934",
+  "mission_control_status": "operational_with_agent_summoner",
+  "core_agents": {
+    "codex": {
+      "status": "assigned",
+      "last_task": null,
+      "capabilities": [
+        "browser_automation",
+        "github_integration",
+        "system_integration"
+      ]
+    },
+    "jules": {
+      "status": "assigned",
+      "last_task": null,
+      "capabilities": [
+        "development",
+        "ui_ux",
+        "pull_requests",
+        "professional_dashboards"
+      ]
+    },
+    "perplexity_sonar": {
+      "status": "assigned",
+      "last_task": null,
+      "capabilities": [
+        "research",
+        "web_search",
+        "analysis",
+        "academic_literature"
+      ]
+    },
+    "market_intelligence": {
+      "status": "standby",
+      "last_task": null,
+      "capabilities": [
+        "competitor_analysis",
+        "market_trends",
+        "funding_landscape"
+      ]
+    },
+    "eu_regulations": {
+      "status": "standby",
+      "last_task": null,
+      "capabilities": [
+        "regulatory_monitoring",
+        "compliance_tracking",
+        "efsa_guidelines"
+      ]
+    }
+  },
+  "discovered_agents": {},
+  "agent_summoner_stats": {
+    "total_summoning_sessions": 0,
+    "total_discovered_agents": 0,
+    "last_summoning": null,
+    "total_summoning_cost": 0
+  },
+  "task_queue_size": 3,
+  "active_core_tasks": 0,
+  "completed_tasks": 0,
+  "system_health": {
+    "core_agent_utilization": "3/5",
+    "discovered_agents_available": 0,
+    "agent_summoner_status": "operational",
+    "task_throughput": "enhanced_with_dynamic_discovery",
+    "error_rate": "low",
+    "overall_health": "excellent_with_summoner_integration"
+  },
+  "recommendations": [
+    "\u2705 Agent Summoner integrated and operational",
+    "Configure Perplexity Pro and Sonar API keys for full research capabilities",
+    "Set up Codex browser automation credentials for Jules integration",
+    "Deploy discovered agents from Agent Summoner recommendations",
+    "Monitor agent summoning costs and optimization opportunities",
+    "Schedule regular agent coordination and performance reviews"
+  ]
+}
