@@ -1,0 +1,395 @@
+{% extends "base.html" %}
+
+{% block title %}Register - XYL-PHOS-CURE Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+.auth-container {
+    padding: 2rem 0;
+}
+
+.auth-card {
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.auth-header {
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+    color: white;
+    padding: 1.5rem 2rem;
+    text-align: center;
+}
+
+.auth-body {
+    padding: 2rem;
+}
+
+.form-floating {
+    margin-bottom: 1rem;
+}
+
+.btn-auth {
+    width: 100%;
+    padding: 0.75rem;
+    font-weight: 600;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.auth-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+.project-info {
+    background: var(--xylella-green);
+    color: white;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.form-check {
+    margin: 1rem 0;
+}
+
+.password-requirements {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+}
+
+.requirement {
+    color: #6c757d;
+}
+
+.requirement.met {
+    color: var(--success-color);
+}
+
+.requirement i {
+    width: 16px;
+}
+
+.terms-link {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i class="fas fa-leaf fa-2x mb-2 text-success"></i>
+                <h2 class="mb-0">Join XYL-PHOS-CURE</h2>
+                <p class="mb-0 opacity-75">Create your project dashboard account</p>
+            </div>
+            
+            <div class="auth-body">
+                <div class="project-info">
+                    <small>
+                        <i class="fas fa-users me-1"></i>
+                        Join the consortium developing the first curative treatment for
+                        <strong>Xylella fastidiosa</strong> - Europe's most devastating plant pathogen.
+                    </small>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Personal Information -->
+                    <h6 class="text-muted mb-3">
+                        <i class="fas fa-user me-2"></i>Personal Information
+                    </h6>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.first_name(class="form-control" + (" is-invalid" if form.first_name.errors else "")) }}
+                                {{ form.first_name.label(class="form-label") }}
+                                {% if form.first_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.first_name.errors[0] }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.last_name(class="form-control" + (" is-invalid" if form.last_name.errors else "")) }}
+                                {{ form.last_name.label(class="form-label") }}
+                                {% if form.last_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.last_name.errors[0] }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating">
+                        {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else "")) }}
+                        {{ form.username.label(class="form-label") }}
+                        {% if form.username.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.username.errors[0] }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-floating">
+                        {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                        {{ form.email.label(class="form-label") }}
+                        {% if form.email.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.email.errors[0] }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Organization Information -->
+                    <h6 class="text-muted mb-3 mt-4">
+                        <i class="fas fa-building me-2"></i>Organization Information
+                    </h6>
+                    
+                    <div class="form-floating">
+                        {{ form.organization(class="form-control" + (" is-invalid" if form.organization.errors else "")) }}
+                        {{ form.organization.label(class="form-label") }}
+                        {% if form.organization.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.organization.errors[0] }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-floating">
+                        {{ form.country(class="form-select" + (" is-invalid" if form.country.errors else "")) }}
+                        {{ form.country.label(class="form-label") }}
+                        {% if form.country.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.country.errors[0] }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Security -->
+                    <h6 class="text-muted mb-3 mt-4">
+                        <i class="fas fa-lock me-2"></i>Account Security
+                    </h6>
+                    
+                    <div class="password-requirements">
+                        <small class="text-muted mb-2 d-block">
+                            <i class="fas fa-shield-alt me-1"></i>Password Requirements:
+                        </small>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="requirement" id="req-length">
+                                    <i class="fas fa-times text-danger"></i> At least 8 characters
+                                </div>
+                                <div class="requirement" id="req-upper">
+                                    <i class="fas fa-times text-danger"></i> One uppercase letter
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="requirement" id="req-lower">
+                                    <i class="fas fa-times text-danger"></i> One lowercase letter
+                                </div>
+                                <div class="requirement" id="req-number">
+                                    <i class="fas fa-times text-danger"></i> One number
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating">
+                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), id="password-field") }}
+                        {{ form.password.label(class="form-label") }}
+                        {% if form.password.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.password.errors[0] }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-floating">
+                        {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else "")) }}
+                        {{ form.confirm_password.label(class="form-label") }}
+                        {% if form.confirm_password.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.confirm_password.errors[0] }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-check">
+                        {{ form.agree_terms(class="form-check-input" + (" is-invalid" if form.agree_terms.errors else "")) }}
+                        <label class="form-check-label" for="{{ form.agree_terms.id }}">
+                            I agree to the 
+                            <a href="#" class="terms-link" data-bs-toggle="modal" data-bs-target="#termsModal">
+                                Terms of Service
+                            </a> 
+                            and 
+                            <a href="#" class="terms-link" data-bs-toggle="modal" data-bs-target="#privacyModal">
+                                Privacy Policy
+                            </a>
+                        </label>
+                        {% if form.agree_terms.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.agree_terms.errors[0] }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-auth">
+                        <i class="fas fa-user-plus me-2"></i>Create Account
+                    </button>
+                </form>
+
+                <div class="auth-links">
+                    <div>
+                        Already have an account?
+                        <a href="{{ url_for('auth.login') }}" class="fw-bold">
+                            <i class="fas fa-sign-in-alt me-1"></i>Sign In
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Terms of Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>XYL-PHOS-CURE Project Access Terms</h6>
+                <p>By creating an account, you agree to:</p>
+                <ul>
+                    <li>Use the platform for legitimate research and collaboration purposes</li>
+                    <li>Maintain confidentiality of sensitive project information</li>
+                    <li>Respect intellectual property and data rights</li>
+                    <li>Follow European Union data protection regulations</li>
+                    <li>Collaborate professionally with consortium partners</li>
+                </ul>
+                <p class="text-muted">
+                    <small>This platform supports the Horizon Europe XYL-PHOS-CURE project (Grant Agreement No. 101271185-1).</small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Privacy Policy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Data Collection and Usage</h6>
+                <p>We collect and process personal data in accordance with GDPR:</p>
+                <ul>
+                    <li><strong>Personal Information:</strong> Name, email, organization, country</li>
+                    <li><strong>Usage Data:</strong> Login times, activity logs, system interactions</li>
+                    <li><strong>Purpose:</strong> Project collaboration, communication, progress tracking</li>
+                    <li><strong>Retention:</strong> Data retained for project duration + 7 years as per EU requirements</li>
+                    <li><strong>Rights:</strong> Access, rectification, erasure, portability under GDPR</li>
+                </ul>
+                <p class="text-muted">
+                    <small>Contact the data controller for any privacy-related inquiries.</small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordField = document.getElementById('password-field');
+    
+    if (passwordField) {
+        passwordField.addEventListener('input', function() {
+            const password = this.value;
+            
+            // Check requirements
+            const requirements = {
+                'req-length': password.length >= 8,
+                'req-upper': /[A-Z]/.test(password),
+                'req-lower': /[a-z]/.test(password),
+                'req-number': /\d/.test(password)
+            };
+            
+            // Update requirement indicators
+            Object.keys(requirements).forEach(reqId => {
+                const element = document.getElementById(reqId);
+                const icon = element.querySelector('i');
+                
+                if (requirements[reqId]) {
+                    element.classList.add('met');
+                    icon.className = 'fas fa-check text-success';
+                } else {
+                    element.classList.remove('met');
+                    icon.className = 'fas fa-times text-danger';
+                }
+            });
+        });
+    }
+    
+    // Form submission handler
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const submitBtn = document.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Account...';
+        submitBtn.disabled = true;
+    });
+    
+    // Auto-focus first field
+    const firstInput = document.querySelector('input[name="first_name"]');
+    if (firstInput) {
+        firstInput.focus();
+    }
+});
+</script>
+{% endblock %}

@@ -4,12 +4,43 @@ XYL-PHOS-CURE Project Management Dashboard
 A focused web interface for managing the Horizon Europe submission and consortium building
 """
 
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect, url_for
+from flask_login import LoginManager, login_required, current_user
 from datetime import datetime, timedelta
 import json
 import os
 
+# Import authentication components
+from models import db, User, init_db
+from auth import auth
+from auth_utils import admin_required, verified_required
+
 app = Flask(__name__)
+
+# Configuration
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'xyl-phos-cure-dev-key-2024')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///xyl_phos_cure.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['WTF_CSRF_ENABLED'] = True
+app.config['WTF_CSRF_TIME_LIMIT'] = 3600  # 1 hour
+
+# Initialize extensions
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'auth.login'
+login_manager.login_message = 'Please log in to access this page.'
+login_manager.login_message_category = 'info'
+
+# Register blueprints
+app.register_blueprint(auth)
+
+# Initialize database
+init_db(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    """Load user for Flask-Login"""
+    return User.query.get(int(user_id))
 
 # Project configuration
 PROJECT_CONFIG = {
@@ -101,14 +132,17 @@ CONSORTIUM_TARGETS = [
 ]
 
 @app.route('/')
+@login_required
 def dashboard():
     """Main dashboard view"""
     return render_template('dashboard.html', 
                          project=PROJECT_CONFIG,
                          milestones=MILESTONES,
-                         consortium=CONSORTIUM_TARGETS)
+                         consortium=CONSORTIUM_TARGETS,
+                         user=current_user)
 
 @app.route('/api/project-status')
+@login_required
 def project_status():
     """API endpoint for project status data"""
     # Calculate days until key dates
@@ -131,16 +165,19 @@ def project_status():
     })
 
 @app.route('/api/milestones')
+@login_required
 def api_milestones():
     """API endpoint for milestone data"""
     return jsonify(MILESTONES)
 
 @app.route('/api/consortium')
+@login_required
 def api_consortium():
     """API endpoint for consortium data"""
     return jsonify(CONSORTIUM_TARGETS)
 
 @app.route('/api/documents')
+@login_required
 def api_documents():
     """API endpoint for project documents"""
     documents = []
@@ -168,6 +205,7 @@ def api_documents():
     return jsonify(documents)
 
 @app.route('/timeline')
+@login_required
 def timeline():
     """Timeline view"""
     return render_template('timeline.html', 
@@ -175,15 +213,87 @@ def timeline():
                          milestones=MILESTONES)
 
 @app.route('/consortium')
+@login_required
 def consortium():
     """Consortium building view"""
     return render_template('consortium.html', 
                          consortium=CONSORTIUM_TARGETS)
 
 @app.route('/documents')
+@login_required
 def documents():
     """Documents management view"""
     return render_template('documents.html')
+
+# Phase 2: Codex Integration API Endpoints
+@app.route('/api/codex-status')
+@login_required
+def codex_status():
+    """API endpoint for Codex background task status"""
+    try:
+        from codex_monitor import CodexMonitor
+        monitor = CodexMonitor()
+        status = monitor.check_status()
+        return jsonify({
+            "status": status["status"] if "status" in status else "idle",
+            "is_running": status["is_running"],
+            "message": status["message"],
+            "current_task": status.get("current_task", None),
+            "log_file": status.get("log_file", None)
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "is_running": False,
+            "message": f"Error checking Codex status: {str(e)}"
+        })
+
+@app.route('/api/codex-logs')
+@login_required
+def codex_logs():
+    """API endpoint for recent Codex logs"""
+    try:
+        from codex_monitor import CodexMonitor
+        monitor = CodexMonitor()
+        lines = request.args.get('lines', 20, type=int)
+        logs = monitor.get_log_tail(lines)
+        return jsonify({
+            "logs": logs,
+            "lines": lines
+        })
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "logs": "Error retrieving logs"
+        })
+
+@app.route('/api/codex-start', methods=['POST'])
+@admin_required
+def codex_start():
+    """API endpoint to start a Codex background task"""
+    try:
+        data = request.get_json()
+        task_description = data.get('task', '')
+        
+        if not task_description:
+            return jsonify({"error": "Task description required"}), 400
+        
+        from codex_monitor import CodexMonitor
+        monitor = CodexMonitor()
+        result = monitor.trigger_background_task(task_description)
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Failed to start Codex task: {str(e)}"
+        })
+
+@app.route('/codex')
+@admin_required
+def codex_dashboard():
+    """Codex management dashboard"""
+    return render_template('codex.html')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

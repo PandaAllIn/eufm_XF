@@ -28,3 +28,5 @@ The workflow for using Jules involves giving it a task, reviewing its plan, and 
 ### Data Privacy
 
 You can go into the settings and disable the option that allows Google to use your code from public repositories to train its AI models.
+
+https://jules.google/docs

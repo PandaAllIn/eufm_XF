@@ -1,0 +1,365 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - XYL-PHOS-CURE Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+.profile-header {
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin: 0 auto 1rem;
+}
+
+.profile-card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.profile-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.info-content {
+    flex-grow: 1;
+}
+
+.info-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+
+.info-value {
+    font-weight: 500;
+    color: #495057;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-verified {
+    background: #d1e7dd;
+    color: #0a3622;
+}
+
+.status-unverified {
+    background: #fff3cd;
+    color: #664d03;
+}
+
+.status-admin {
+    background: #f8d7da;
+    color: #58151c;
+}
+
+.status-user {
+    background: #cff4fc;
+    color: #055160;
+}
+
+.activity-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-date {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Profile Header -->
+<div class="profile-header">
+    <div class="container-fluid">
+        <div class="text-center">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <h2>{{ user.full_name }}</h2>
+            <p class="mb-0 opacity-75">
+                <i class="fas fa-building me-1"></i>{{ user.organization }}
+            </p>
+            <p class="mb-0 opacity-75">
+                <i class="fas fa-globe me-1"></i>{{ get_country_name(user.country) }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="row">
+        <!-- Profile Information -->
+        <div class="col-lg-8">
+            <div class="card profile-card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-id-card me-2"></i>Profile Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Email Address</div>
+                            <div class="info-value">
+                                {{ user.email }}
+                                {% if user.is_verified %}
+                                    <span class="status-badge status-verified ms-2">
+                                        <i class="fas fa-check-circle me-1"></i>Verified
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-unverified ms-2">
+                                        <i class="fas fa-exclamation-circle me-1"></i>Unverified
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-user-tag"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Username</div>
+                            <div class="info-value">{{ user.username }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Organization</div>
+                            <div class="info-value">{{ user.organization }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Country</div>
+                            <div class="info-value">{{ get_country_name(user.country) }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Account Role</div>
+                            <div class="info-value">
+                                {% if user.is_admin %}
+                                    <span class="status-badge status-admin">
+                                        <i class="fas fa-crown me-1"></i>Administrator
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-user">
+                                        <i class="fas fa-user me-1"></i>User
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('auth.edit_profile') }}" class="btn btn-primary">
+                            <i class="fas fa-edit me-2"></i>Edit Profile
+                        </a>
+                        <a href="{{ url_for('auth.change_password') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </a>
+                        {% if not user.is_verified %}
+                            <a href="{{ url_for('auth.resend_verification') }}" class="btn btn-outline-warning">
+                                <i class="fas fa-envelope me-2"></i>Verify Email
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Account Activity -->
+        <div class="col-lg-4">
+            <div class="card profile-card mb-4">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-clock me-2"></i>Account Activity
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="activity-item">
+                        <div class="info-label">Member Since</div>
+                        <div class="info-value">{{ user.created_at.strftime('%B %d, %Y') }}</div>
+                        <div class="activity-date">{{ user.created_at.strftime('%I:%M %p') }}</div>
+                    </div>
+                    
+                    {% if user.last_login %}
+                    <div class="activity-item">
+                        <div class="info-label">Last Login</div>
+                        <div class="info-value">{{ user.last_login.strftime('%B %d, %Y') }}</div>
+                        <div class="activity-date">{{ user.last_login.strftime('%I:%M %p') }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if user.updated_at and user.updated_at != user.created_at %}
+                    <div class="activity-item">
+                        <div class="info-label">Profile Updated</div>
+                        <div class="info-value">{{ user.updated_at.strftime('%B %d, %Y') }}</div>
+                        <div class="activity-date">{{ user.updated_at.strftime('%I:%M %p') }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Project Access -->
+            <div class="card profile-card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-leaf me-2 text-success"></i>Project Access
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="info-item">
+                        <div class="info-icon bg-success">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Dashboard</div>
+                            <div class="info-value">Full Access</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon bg-success">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Timeline</div>
+                            <div class="info-value">Full Access</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon bg-success">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Consortium</div>
+                            <div class="info-value">Full Access</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon bg-success">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Documents</div>
+                            <div class="info-value">Full Access</div>
+                        </div>
+                    </div>
+                    
+                    {% if user.is_admin %}
+                    <div class="info-item">
+                        <div class="info-icon bg-danger">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">User Management</div>
+                            <div class="info-value">Admin Access</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to info items
+    const infoItems = document.querySelectorAll('.info-item');
+    infoItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f8f9fa';
+        });
+        item.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = 'transparent';
+        });
+    });
+});
+</script>
+{% endblock %}
